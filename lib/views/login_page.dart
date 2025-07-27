@@ -25,6 +25,7 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController passwordController = TextEditingController();
 
   bool isLoading = false;
+  bool isArabic = true;
 
   Future<bool> login() async {
     if (!_formKey.currentState!.validate()) return false;
@@ -39,12 +40,10 @@ class _LoginPageState extends State<LoginPage> {
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        
+
         showSnackBar(context, 'تم تسجيل الدخول بنجاح');
         return true;
-      
       } else {
-       
         showSnackBar(context, 'فشل تسجيل الدخول: ${response.body}');
         print(response.body);
         return false;
@@ -138,10 +137,7 @@ class _LoginPageState extends State<LoginPage> {
                       style: TextStyle(color: Colors.black),
                     ),
                     GestureDetector(
-                      onTap: () {
-                       
-                       
-                      },
+                      onTap: () {},
                       child: Text(
                         "اعاده تعيين",
                         style: TextStyle(
@@ -158,10 +154,7 @@ class _LoginPageState extends State<LoginPage> {
                   onTap: () async {
                     bool success = await login();
                     if (success) {
-                      Navigator.pushNamed(
-                        context,
-                        'homeView',
-                      ); 
+                      Navigator.pushNamed(context, 'homeView');
                     }
                     setState(() => isLoading = false);
                   },
@@ -187,7 +180,60 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 50),
+                const SizedBox(height: 25),
+                Text(
+                  'تخطي الان ',
+                  style: TextStyle(fontSize: 16, color: Colors.black),
+                ),
+                SizedBox(height: 45),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'العربيه',
+                      style: TextStyle(fontSize: 16, color: Colors.black),
+                    ),
+                    SizedBox(width: 10),
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          isArabic = !isArabic;
+                        });
+                      },
+                      child: AnimatedContainer(
+                        duration: Duration(milliseconds: 300),
+                        width: 60,
+                        height: 35,
+                        padding: EdgeInsets.symmetric(horizontal: 4),
+                        decoration: BoxDecoration(
+                          color: Colors.grey, // الخلفية
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: AnimatedAlign(
+                          duration: Duration(milliseconds: 300),
+                          alignment: isArabic
+                              ? Alignment.centerRight
+                              : Alignment.centerLeft,
+                          curve: Curves.easeInOut,
+                          child: Container(
+                            width: 22,
+                            height: 22,
+                            decoration: BoxDecoration(
+                              color: Colors.black, // لون الزر الدائري
+                              shape: BoxShape.circle,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 10),
+                    Text(
+                      'English',
+                      style: TextStyle(fontSize: 16, color: Colors.black),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 50),
               ],
             ),
           ),
