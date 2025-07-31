@@ -103,7 +103,7 @@ class _LoginPageState extends State<LoginPage> {
                   maxLength: 10,
                   inputFormatters: [
                     FilteringTextInputFormatter.digitsOnly,
-                    LengthLimitingTextInputFormatter(11),
+                    LengthLimitingTextInputFormatter(10),
                   ],
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
@@ -196,6 +196,7 @@ class _LoginPageState extends State<LoginPage> {
                     SizedBox(width: 10),
                     GestureDetector(
                       onTap: () {
+                        // Navigator.pushNamed(context, 'verfiyPage');
                         setState(() {
                           isArabic = !isArabic;
                         });

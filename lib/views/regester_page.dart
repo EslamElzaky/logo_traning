@@ -49,16 +49,19 @@ class _RegesterPageState extends State<RegesterPage> {
         confirmPassword: confirmPasswordController.text,
         userName: phoneController.text.trim(),
       );
+      if (passwordController.text != confirmPasswordController.text) {
+        showSnackBar(context, 'كلمة المرور وتأكيد كلمة المرور غير متطابقتين');
+        setState(() => isLoading = false);
+        return false;
+      }
 
       final response = await ApiService().registerUser(user);
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         showSnackBar(context, 'تم تسجيل الدخول بنجاح');
-        
+
         return true;
-       
       } else {
-        
         showSnackBar(context, 'فشل تسجيل الدخول: ${response.body}');
         return false;
       }
@@ -198,9 +201,13 @@ class _RegesterPageState extends State<RegesterPage> {
                   onTap: () async {
                     bool success = await register();
                     if (success) {
+                      await ApiService().regenerateOtp(
+                        phoneController.text.trim(),
+                      );
                       Navigator.pushNamed(
                         context,
-                        'homeView',
+                        'verfiyPage',
+                        arguments: phoneController.text.trim(),
                       );
                     }
                     setState(() => isLoading = false);

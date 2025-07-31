@@ -1,0 +1,290 @@
+import 'dart:convert';
+import 'dart:developer';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_countdown_timer/countdown_timer_controller.dart';
+import 'package:logo_app_traning/Cubit/otp_cubit.dart';
+import 'package:logo_app_traning/Cubit/otp_state.dart';
+import 'package:logo_app_traning/helper/custom_button.dart';
+import 'package:logo_app_traning/helper/custom_snack_bar.dart';
+import 'package:logo_app_traning/helper/custom_text_field.dart';
+import 'package:offline_captcha/offline_captcha.dart';
+import 'package:pin_code_fields/pin_code_fields.dart';
+import 'package:flutter_countdown_timer/flutter_countdown_timer.dart';
+import 'package:logo_app_traning/helper/api_servic.dart';
+import 'dart:ui';
+
+class VerfiyPage extends StatefulWidget {
+  const VerfiyPage({super.key});
+  static String id = 'verfiyPage';
+  @override
+  State<VerfiyPage> createState() => _VerfiyPageState();
+}
+
+class _VerfiyPageState extends State<VerfiyPage> {
+  // late CountdownTimerController controller;
+  // int endTime = DateTime.now().millisecondsSinceEpoch + 1000 * 30;
+
+  final TextEditingController _pinController = TextEditingController();
+  final TextEditingController _captchaInputController = TextEditingController();
+
+  // Controller للكابتشا المولّدة
+  final CaptchaController _captchaController = CaptchaController(length: 6);
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      OtpCubit.get(context).startTimer();
+    });
+
+    _captchaController.regenerate();
+  }
+
+  // void _onEnd() {
+  //   if (mounted) setState(() {});
+  // }
+
+  @override
+  void dispose() {
+    // controller.dispose();
+    _pinController.dispose();
+    _captchaInputController.dispose();
+    super.dispose();
+  }
+
+  void _onVerifyPressed() async {
+    final input = _captchaInputController.text.trim();
+    final otpCode = _pinController.text.trim();
+
+    // تحقق من الكابتشا
+    bool isValidCaptcha = _captchaController.validate(input);
+    if (!isValidCaptcha) {
+      showSnackBar(context, 'الكابتشا غير صحيحة');
+
+      return;
+    }
+
+    if (otpCode.length != 6) {
+      showSnackBar(context, 'من فضلك أدخل رمز التحقق الكامل');
+
+      return;
+    }
+
+    final phoneNumber = ModalRoute.of(context)!.settings.arguments as String;
+    try {
+      final response = await ApiService().verifyOtp(phoneNumber, otpCode);
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        final success = data['isSuccess'] ?? false;
+
+        if (success) {
+          showSnackBar(context, 'تم التحقق بنجاح');
+
+          Navigator.pushReplacementNamed(context, 'homeView'); // مثال
+        } else {
+          showSnackBar(context, ' فشل التحقق: ${data["message"] ?? "حدث خطأ"}');
+        }
+      } else {
+        showSnackBar(context, ' فشل الاتصال: ${response.statusCode}');
+      }
+    } catch (e) {
+      showSnackBar(context, ' خطأ أثناء التحقق: $e');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final String phoneNumber =
+        ModalRoute.of(context)!.settings.arguments as String;
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                const Text(
+                  "Logo",
+                  style: TextStyle(
+                    fontSize: 40,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Alexandria',
+                    color: Colors.black,
+                  ),
+                ),
+                const SizedBox(height: 20),
+                const Text(
+                  "التحقق من الجوال",
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "تم إرسال رمز التحقق لجوال رقم ",
+                      style: TextStyle(color: Colors.black),
+                    ),
+                    Text(phoneNumber, style: TextStyle(color: Colors.black)),
+                    Text("  تغيير", style: TextStyle(color: Colors.blue)),
+                  ],
+                ),
+                const SizedBox(height: 16),
+
+                // كود التحقق - PinCode
+                Directionality(
+                  textDirection: TextDirection.ltr,
+                  child: PinCodeTextField(
+                    textStyle: TextStyle(color: Colors.black),
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    appContext: context,
+                    length: 6,
+                    controller: _pinController,
+                    keyboardType: TextInputType.number,
+                    animationType: AnimationType.fade,
+
+                    pinTheme: PinTheme(
+                      shape: PinCodeFieldShape.box,
+                      borderRadius: BorderRadius.circular(8),
+                      fieldHeight: 50,
+                      fieldWidth: 40,
+                      activeColor: Colors.black,
+                      selectedColor: Colors.blue,
+                      inactiveColor: Colors.grey,
+                    ),
+                    animationDuration: const Duration(milliseconds: 300),
+                    onChanged: (value) {},
+                    onCompleted: (value) {
+                      print("رمز التحقق: $value");
+                    },
+                  ),
+                ),
+
+                const SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      'لم تستلم الرمز؟ارسله بعد',
+                      style: TextStyle(color: Color(0xFF24A19B)),
+                    ),
+                    // const Icon(Icons.access_time, size: 16, color: Colors.teal),
+                    const SizedBox(width: 5),
+                    BlocBuilder<OtpCubit, OtpState>(
+                      builder: (context, state) {
+                        log(
+                          'controller: ${state.controller}, isRunning: ${state.controller?.isRunning}',
+                        );
+                        
+                        if (state.controller != null) {
+                          return CountdownTimer(
+                            controller: state.controller!,
+                            onEnd: () {
+                              log('Timer ended');
+                            },
+                            widgetBuilder: (_, time) {
+                              if (time == null) {
+                                // الوقت انتهى – عرض زر إعادة الإرسال
+                                return InkWell(
+                                  onTap: () {
+                                    log('Resend OTP tapped');
+                                    OtpCubit.get(context).resartTimer();
+                                    _captchaController
+                                        .regenerate(); // لو عندك كابتشا
+                                    ApiService().regenerateOtp(phoneNumber);
+                                  },
+                                  child: Text(
+                                    "أعد الإرسال الآن",
+                                    style: TextStyle(
+                                      color: Colors.teal,
+                                      fontWeight: FontWeight.bold,
+                                      decoration: TextDecoration.underline,
+                                    ),
+                                  ),
+                                );
+                              }
+
+                              // عرض الوقت المتبقي بالثواني
+                              return Text(
+                                "${time.sec?.toString().padLeft(2, '0') ?? '00'}",
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.teal,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              );
+                            },
+                          );
+                        } else {
+                          // controller غير موجود – عرض نص افتراضي
+                          return SizedBox.shrink();
+                        }
+
+                      },
+                    ),
+                    
+                  ],
+                ),
+                const SizedBox(height: 20),
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    CaptchaWidget(
+                      width: 240,
+                      controller: _captchaController,
+                      theme: CaptchaTheme(
+                        scribbleIntensity: 2.0,
+                        scribbleColors: [
+                          Colors.red.withOpacity(0.8),
+                          Colors.blue.withOpacity(0.9),
+                          Colors.black.withOpacity(0.5),
+                        ],
+                        numberColor: Colors.black87.withValues(alpha: .5),
+                        fontSize: 28,
+                        backgroundColor: Colors.blueGrey.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+
+                    IconButton(
+                      icon: const Icon(Icons.refresh, color: Colors.black),
+                      onPressed: () {
+                        setState(() {
+                          _captchaController.regenerate();
+                          _captchaInputController.clear();
+                        });
+                      },
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 40),
+                CostumFormTextField(
+                  controller: _captchaInputController,
+                  labelText: 'اكتب الحروف الظاهرة بالأعلى',
+                ),
+
+                const SizedBox(height: 20),
+
+                CustomButton(
+                  size: 150,
+                  text: 'تحقق من الرمز',
+                  onTap: () {
+                    _onVerifyPressed();
+                  },
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}

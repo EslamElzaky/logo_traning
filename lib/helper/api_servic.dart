@@ -30,4 +30,26 @@ class ApiService {
     );
     return response;
   }
+  
+Future<http.Response> verifyOtp(String phoneNumber, String otp) async {
+    final url = Uri.parse('$baseUrl/ar/Account/VerifyCode');
+    final response = await http.post(
+      url,
+      headers: headers,
+      body: jsonEncode({'userName': phoneNumber, 'otp': otp}),
+    );
+    return response;
+  }
+
+  Future<http.Response> regenerateOtp(String phoneNumber) async {
+    final url = Uri.parse('$baseUrl/ar/Account/ReGenrateCode');
+    final response = await http.post(
+      url,
+      headers: headers,
+      body: jsonEncode({'userName': phoneNumber}),
+    );
+    return response;
+  }
+
+
 }
