@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:logo_app_traning/helper/api_servic.dart';
@@ -21,12 +23,13 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
 
-  final TextEditingController phoneController = TextEditingController();
+  final TextEditingController phoneController = TextEditingController(
+    text: '050',
+  );
   final TextEditingController passwordController = TextEditingController();
 
   bool isLoading = false;
   bool isArabic = true;
-
   Future<bool> login() async {
     if (!_formKey.currentState!.validate()) return false;
 
@@ -40,9 +43,9 @@ class _LoginPageState extends State<LoginPage> {
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-
-        showSnackBar(context, 'تم تسجيل الدخول بنجاح');
+        log(data.toString());
         return true;
+       
       } else {
         showSnackBar(context, 'فشل تسجيل الدخول: ${response.body}');
         print(response.body);
@@ -56,6 +59,36 @@ class _LoginPageState extends State<LoginPage> {
       setState(() => isLoading = false);
     }
   }
+
+  // Future<bool> login() async {
+  //   if (!_formKey.currentState!.validate()) return false;
+
+  //   setState(() => isLoading = true);
+
+  //   try {
+  //     final response = await ApiService().loginUser(
+  //       phoneController.text.trim(),
+  //       passwordController.text.trim(),
+  //     );
+
+  //     if (response.statusCode == 200) {
+  //       final data = jsonDecode(response.body);
+
+  //       showSnackBar(context, 'تم تسجيل الدخول بنجاح');
+  //       return true;
+  //     } else {
+  //       showSnackBar(context, 'فشل تسجيل الدخول: ${response.body}');
+  //       print(response.body);
+  //       return false;
+  //     }
+  //   } catch (e) {
+  //     showSnackBar(context, 'حدث خطأ أثناء تسجيل الدخول');
+  //     print(e);
+  //     return false;
+  //   } finally {
+  //     setState(() => isLoading = false);
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -96,27 +129,41 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 const SizedBox(height: 30),
-                CostumFormTextField(
+                CustomFormTextField(
                   controller: phoneController,
                   keyboardType: TextInputType.phone,
+                  onChanged: (data) {
+                    if (!data.startsWith('050')) {
+                      phoneController.text = '050';
+                      phoneController.selection = TextSelection.fromPosition(
+                        TextPosition(offset: phoneController.text.length),
+                      );
+                    } else if (data.length > 10) {
+                      phoneController.text = data.substring(0, 10);
+                      phoneController.selection = TextSelection.fromPosition(
+                        TextPosition(offset: phoneController.text.length),
+                      );
+                    }
+                  },
                   labelText: 'رقم الجوال',
                   maxLength: 10,
-                  inputFormatters: [
-                    FilteringTextInputFormatter.digitsOnly,
-                    LengthLimitingTextInputFormatter(10),
-                  ],
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
                       return 'رقم الهاتف مطلوب';
                     }
-                    if (value.trim().length != 10) {
-                      return 'رقم الهاتف يجب أن يكون 10 رقم';
+                    if (!value.startsWith('050')) {
+                      return 'رقم الهاتف يجب أن يبدأ بـ 050';
+                    }
+                    if (value.length != 10) {
+                      return 'رقم الهاتف يجب أن يتكون من 10 أرقام';
                     }
                     return null;
                   },
                 ),
+
                 const SizedBox(height: 20),
-                CostumFormTextField(
+                CustomFormTextField(
                   controller: passwordController,
                   labelText: 'كلمه المرور',
                   obscureText: true,
@@ -196,7 +243,6 @@ class _LoginPageState extends State<LoginPage> {
                     SizedBox(width: 10),
                     GestureDetector(
                       onTap: () {
-                        // Navigator.pushNamed(context, 'verfiyPage');
                         setState(() {
                           isArabic = !isArabic;
                         });

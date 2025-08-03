@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:intl/intl.dart';
 
-class CostumFormTextField extends StatefulWidget {
-  CostumFormTextField({
+class CustomFormTextField extends StatefulWidget {
+  CustomFormTextField({
     super.key,
     this.prefixText,
     this.readOnly = false,
@@ -14,13 +13,13 @@ class CostumFormTextField extends StatefulWidget {
     this.onChanged,
     this.obscureText = false,
     this.controller,
-    this.isDate = false,
+ 
     this.usePassword = false,
     this.onSaved,
     this.initialValue,
     this.validator,
     this.maxLength,
-    this.inputFormatters,
+    this.inputFormatters, this.errorText,
   });
 
   final bool usePassword;
@@ -30,71 +29,29 @@ class CostumFormTextField extends StatefulWidget {
   final int? maxLength;
   final String? labelText;
   final String? prefixText;
+  final String? errorText;
 
   final TextInputType? keyboardType;
   bool obscureText;
   final Function(String)? onChanged;
   final TextEditingController? controller;
-  final bool isDate;
+ 
   final bool readOnly;
   final void Function(String?)? onSaved;
   final String? Function(String?)? validator;
   final List<TextInputFormatter>? inputFormatters;
 
   @override
-  State<CostumFormTextField> createState() => _CostumFormTextFieldState();
+  State<CustomFormTextField> createState() => _CustomFormTextFieldState();
 }
 
-class _CostumFormTextFieldState extends State<CostumFormTextField> {
-  Future<void> _selectDateTime(BuildContext context) async {
-    final DateTime? pickedDate = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(1900),
-      lastDate: DateTime(2100),
-    );
-
-    if (pickedDate != null) {
-      final TimeOfDay? pickedTime = await showTimePicker(
-        context: context,
-        initialTime: TimeOfDay.now(),
-      );
-
-      if (pickedTime != null) {
-        final DateTime fullDateTime = DateTime(
-          pickedDate.year,
-          pickedDate.month,
-          pickedDate.day,
-          pickedTime.hour,
-          pickedTime.minute,
-        );
-
-        // ✅ استخدم DateFormat هنا للتنسيق
-        final String formatted = DateFormat(
-          'yyyy-MM-dd hh:mm a',
-        ).format(fullDateTime);
-
-        // شيل التركيز من الحقل
-        FocusScope.of(context).unfocus();
-
-        // حدث النص بعد فترة بسيطة
-        Future.delayed(const Duration(milliseconds: 100), () {
-          if (widget.controller != null) {
-            widget.controller!.text = formatted;
-          }
-
-          if (widget.onChanged != null) {
-            widget.onChanged!(formatted);
-          }
-        });
-      }
-    }
-  }
+class _CustomFormTextFieldState extends State<CustomFormTextField> {
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-       style: TextStyle(color: Colors.black),
+      
+      style: TextStyle(color: Colors.black),
       inputFormatters: widget.inputFormatters,
       maxLength: widget.maxLength,
       initialValue: widget.initialValue,
@@ -104,11 +61,11 @@ class _CostumFormTextFieldState extends State<CostumFormTextField> {
       maxLines: widget.maxLines,
       cursorColor: Colors.black,
       obscureText: widget.obscureText,
-      readOnly: widget.readOnly || widget.isDate,
+      readOnly: widget.readOnly ,
+      
+
       onChanged: widget.onChanged,
-      onTap: (widget.isDate && !widget.readOnly)
-          ? () => _selectDateTime(context)
-          : null,
+      
       validator: (data) {
         if (data?.isEmpty ?? true) {
           //لو هوا فاضي يبقي )(صح ونفذ الريترن)
@@ -122,6 +79,7 @@ class _CostumFormTextFieldState extends State<CostumFormTextField> {
       },
 
       decoration: InputDecoration(
+        errorText:widget.errorText ,
         prefixText: widget.prefixText,
         labelText: widget.labelText,
         labelStyle: TextStyle(color: Colors.black, fontSize: 22),

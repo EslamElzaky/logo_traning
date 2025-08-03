@@ -15,7 +15,7 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
+ 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         theme: ThemeData(brightness: Brightness.dark, fontFamily: 'Poppins'),
         debugShowCheckedModeBanner: false,
-        locale: const Locale('ar'), // 👈 لغة التطبيق
+        locale: const Locale('ar'), 
         supportedLocales: [Locale('ar')],
         localizationsDelegates: [
           GlobalMaterialLocalizations.delegate,
@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
         ],
         builder: (context, child) {
           return Directionality(
-            textDirection: TextDirection.rtl, // 👈 الاتجاه من اليمين
+            textDirection: TextDirection.rtl, 
             child: child!,
           );
         },
@@ -42,7 +42,7 @@ class MyApp extends StatelessWidget {
           'homeView': (context) => HomeView(),
           'verfiyPage': (context) => VerfiyPage(),
         },
-        initialRoute: LoginPage.id, // 👈 صفحتك الأساسية
+        initialRoute: LoginPage.id, 
       ),
     );
   }

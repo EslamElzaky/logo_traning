@@ -5,7 +5,6 @@ import 'package:logo_app_traning/helper/custom_button.dart';
 import 'package:logo_app_traning/helper/custom_snack_bar.dart';
 import 'package:logo_app_traning/helper/custom_text_field.dart';
 import 'package:logo_app_traning/model/regester_model.dart';
-import 'package:logo_app_traning/views/home_view.dart';
 import 'package:logo_app_traning/views/login_page.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
@@ -18,7 +17,9 @@ class RegesterPage extends StatefulWidget {
 }
 
 class _RegesterPageState extends State<RegesterPage> {
-  final TextEditingController phoneController = TextEditingController();
+  final TextEditingController phoneController = TextEditingController(
+    text: '050',
+  );
   final TextEditingController emailController = TextEditingController();
   final TextEditingController firstNameController = TextEditingController();
   final TextEditingController middleNameController = TextEditingController();
@@ -34,7 +35,8 @@ class _RegesterPageState extends State<RegesterPage> {
       firstName,
       midName,
       lastName,
-      confirmPassword;
+      confirmPassword,
+      passwordError;
   bool isLoading = false;
 
   Future<bool> register() async {
@@ -108,54 +110,82 @@ class _RegesterPageState extends State<RegesterPage> {
                   ),
                 ),
                 SizedBox(height: 20),
-                CostumFormTextField(
+                CustomFormTextField(
                   controller: firstNameController,
                   onChanged: (data) {
                     firstName = data;
                   },
                   labelText: 'الاسم الاول',
+                  inputFormatters: [
+                    FilteringTextInputFormatter.allow(
+                      RegExp(r'[a-zA-Z\u0621-\u064A\s]'),
+                    ),
+                  ],
                 ),
                 SizedBox(height: 20),
-                CostumFormTextField(
+                CustomFormTextField(
                   controller: middleNameController,
                   onChanged: (data) {
                     midName = data;
                   },
                   labelText: 'الاسم الاوسط',
+                  inputFormatters: [
+                    FilteringTextInputFormatter.allow(
+                      RegExp(r'[a-zA-Z\u0621-\u064A\s]'),
+                    ),
+                  ],
                 ),
                 SizedBox(height: 20),
-                CostumFormTextField(
+                CustomFormTextField(
                   controller: lastNameController,
                   onChanged: (data) {
                     lastName = data;
                   },
                   labelText: 'الاسم الاخير',
+                  inputFormatters: [
+                    FilteringTextInputFormatter.allow(
+                      RegExp(r'[a-zA-Z\u0621-\u064A\s]'),
+                    ),
+                  ],
                 ),
                 SizedBox(height: 20),
-                CostumFormTextField(
+                CustomFormTextField(
                   controller: phoneController,
                   keyboardType: TextInputType.phone,
                   onChanged: (data) {
-                    userName = data;
+                    if (!data.startsWith('050')) {
+                      phoneController.text = '050';
+                      phoneController.selection = TextSelection.fromPosition(
+                        TextPosition(offset: phoneController.text.length),
+                      );
+                    } else if (data.length > 10) {
+                      phoneController.text = data.substring(0, 10);
+                      phoneController.selection = TextSelection.fromPosition(
+                        TextPosition(offset: phoneController.text.length),
+                      );
+                    } else {
+                      userName = data;
+                    }
                   },
                   labelText: 'رقم الجوال',
                   maxLength: 10,
-                  inputFormatters: [
-                    FilteringTextInputFormatter.digitsOnly,
-                    LengthLimitingTextInputFormatter(10),
-                  ],
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
                       return 'رقم الهاتف مطلوب';
                     }
-                    if (value.trim().length != 10) {
-                      return 'رقم الهاتف لا يقل عن 10 رقم';
+                    if (!value.startsWith('050')) {
+                      return 'رقم الهاتف يجب أن يبدأ بـ 050';
+                    }
+                    if (value.length != 10) {
+                      return 'رقم الهاتف يجب أن يتكون من 10 أرقام';
                     }
                     return null;
                   },
                 ),
+
                 SizedBox(height: 20),
-                CostumFormTextField(
+                CustomFormTextField(
                   controller: emailController,
                   onChanged: (data) {
                     email = data;
@@ -175,7 +205,7 @@ class _RegesterPageState extends State<RegesterPage> {
                   },
                 ),
                 SizedBox(height: 20),
-                CostumFormTextField(
+                CustomFormTextField(
                   controller: passwordController,
                   onChanged: (data) {
                     password = data;
@@ -185,14 +215,24 @@ class _RegesterPageState extends State<RegesterPage> {
                   usePassword: true,
                 ),
                 SizedBox(height: 20),
-                CostumFormTextField(
+                CustomFormTextField(
                   controller: confirmPasswordController,
                   onChanged: (data) {
                     confirmPassword = data;
+                    if (confirmPassword != password) {
+                      setState(() {
+                        passwordError = 'كلمتا المرور غير متطابقتين';
+                      });
+                    } else {
+                      setState(() {
+                        passwordError = null;
+                      });
+                    }
                   },
                   labelText: 'تاكيد الباسورد',
                   obscureText: true,
                   usePassword: true,
+                  errorText: passwordError,
                 ),
                 SizedBox(height: 40),
                 CustomButton(
