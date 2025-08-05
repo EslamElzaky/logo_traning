@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_countdown_timer/countdown_timer_controller.dart';
 import 'package:logo_app_traning/Cubit/otp_cubit.dart';
 import 'package:logo_app_traning/Cubit/otp_state.dart';
 import 'package:logo_app_traning/helper/custom_button.dart';
@@ -22,14 +21,12 @@ class VerfiyPage extends StatefulWidget {
 }
 
 class _VerfiyPageState extends State<VerfiyPage> {
-  // late CountdownTimerController controller;
-  // int endTime = DateTime.now().millisecondsSinceEpoch + 1000 * 30;
+  
 
-  final TextEditingController _pinController = TextEditingController();
-  final TextEditingController _captchaInputController = TextEditingController();
+  static TextEditingController pinController = TextEditingController();
+  final TextEditingController captchaInputController = TextEditingController();
 
-  // Controller للكابتشا المولّدة
-  final CaptchaController _captchaController = CaptchaController(length: 6);
+  final CaptchaController captchaController = CaptchaController(length: 6);
 
   @override
   void initState() {
@@ -38,27 +35,25 @@ class _VerfiyPageState extends State<VerfiyPage> {
       OtpCubit.get(context).startTimer();
     });
 
-    _captchaController.regenerate();
+    captchaController.regenerate();
   }
 
-  // void _onEnd() {
-  //   if (mounted) setState(() {});
-  // }
+ 
 
   @override
   void dispose() {
-    // controller.dispose();
-    _pinController.dispose();
-    _captchaInputController.dispose();
+   
+    pinController.dispose();
+    captchaInputController.dispose();
     super.dispose();
   }
 
   void _onVerifyPressed() async {
-    final input = _captchaInputController.text.trim();
-    final otpCode = _pinController.text.trim();
+    final input = captchaInputController.text.trim();
+    final otpCode = pinController.text.trim();
 
-    // تحقق من الكابتشا
-    bool isValidCaptcha = _captchaController.validate(input);
+    
+    bool isValidCaptcha = captchaController.validate(input);
     if (!isValidCaptcha) {
       showSnackBar(context, 'الكابتشا غير صحيحة');
 
@@ -138,7 +133,7 @@ class _VerfiyPageState extends State<VerfiyPage> {
                 ),
                 const SizedBox(height: 16),
 
-                // كود التحقق - PinCode
+               
                 Directionality(
                   textDirection: TextDirection.ltr,
                   child: PinCodeTextField(
@@ -146,7 +141,7 @@ class _VerfiyPageState extends State<VerfiyPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     appContext: context,
                     length: 6,
-                    controller: _pinController,
+                    controller: pinController,
                     keyboardType: TextInputType.number,
                     animationType: AnimationType.fade,
 
@@ -175,14 +170,14 @@ class _VerfiyPageState extends State<VerfiyPage> {
                       'لم تستلم الرمز؟ارسله بعد',
                       style: TextStyle(color: Color(0xFF24A19B)),
                     ),
-                    // const Icon(Icons.access_time, size: 16, color: Colors.teal),
+                   
                     const SizedBox(width: 5),
                     BlocBuilder<OtpCubit, OtpState>(
                       builder: (context, state) {
                         log(
                           'controller: ${state.controller}, isRunning: ${state.controller?.isRunning}',
                         );
-                        
+
                         if (state.controller != null) {
                           return CountdownTimer(
                             controller: state.controller!,
@@ -191,13 +186,13 @@ class _VerfiyPageState extends State<VerfiyPage> {
                             },
                             widgetBuilder: (_, time) {
                               if (time == null) {
-                                // الوقت انتهى – عرض زر إعادة الإرسال
+                           
                                 return InkWell(
                                   onTap: () {
                                     log('Resend OTP tapped');
                                     OtpCubit.get(context).resartTimer();
-                                    _captchaController
-                                        .regenerate(); // لو عندك كابتشا
+                                    captchaController
+                                        .regenerate(); 
                                     ApiService().regenerateOtp(phoneNumber);
                                   },
                                   child: Text(
@@ -211,7 +206,7 @@ class _VerfiyPageState extends State<VerfiyPage> {
                                 );
                               }
 
-                              // عرض الوقت المتبقي بالثواني
+                              
                               return Text(
                                 "${time.sec?.toString().padLeft(2, '0') ?? '00'}",
                                 style: const TextStyle(
@@ -223,13 +218,11 @@ class _VerfiyPageState extends State<VerfiyPage> {
                             },
                           );
                         } else {
-                          // controller غير موجود – عرض نص افتراضي
+                         
                           return SizedBox.shrink();
                         }
-
                       },
                     ),
-                    
                   ],
                 ),
                 const SizedBox(height: 20),
@@ -239,7 +232,7 @@ class _VerfiyPageState extends State<VerfiyPage> {
                   children: [
                     CaptchaWidget(
                       width: 240,
-                      controller: _captchaController,
+                      controller: captchaController,
                       theme: CaptchaTheme(
                         scribbleIntensity: 2.0,
                         scribbleColors: [
@@ -258,16 +251,16 @@ class _VerfiyPageState extends State<VerfiyPage> {
                       icon: const Icon(Icons.refresh, color: Colors.black),
                       onPressed: () {
                         setState(() {
-                          _captchaController.regenerate();
-                          _captchaInputController.clear();
+                          captchaController.regenerate();
+                          captchaInputController.clear();
                         });
                       },
                     ),
                   ],
                 ),
                 const SizedBox(height: 40),
-                CostumFormTextField(
-                  controller: _captchaInputController,
+                CustomFormTextField(
+                  controller: captchaInputController,
                   labelText: 'اكتب الحروف الظاهرة بالأعلى',
                 ),
 

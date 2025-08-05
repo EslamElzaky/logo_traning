@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logo_app_traning/Cubit/otp_cubit.dart';
+import 'package:logo_app_traning/views/forget_password.dart';
 import 'package:logo_app_traning/views/home_view.dart';
 import 'package:logo_app_traning/views/login_page.dart';
 import 'package:logo_app_traning/views/regester_page.dart';
-
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:logo_app_traning/views/reset_password.dart';
 import 'package:logo_app_traning/views/verfiy_page.dart';
 
 void main() {
@@ -15,7 +16,7 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
+ 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -23,7 +24,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         theme: ThemeData(brightness: Brightness.dark, fontFamily: 'Poppins'),
         debugShowCheckedModeBanner: false,
-        locale: const Locale('ar'), // 👈 لغة التطبيق
+        locale: const Locale('ar'), 
         supportedLocales: [Locale('ar')],
         localizationsDelegates: [
           GlobalMaterialLocalizations.delegate,
@@ -32,7 +33,7 @@ class MyApp extends StatelessWidget {
         ],
         builder: (context, child) {
           return Directionality(
-            textDirection: TextDirection.rtl, // 👈 الاتجاه من اليمين
+            textDirection: TextDirection.rtl, 
             child: child!,
           );
         },
@@ -41,8 +42,10 @@ class MyApp extends StatelessWidget {
           'loginpage': (context) => LoginPage(),
           'homeView': (context) => HomeView(),
           'verfiyPage': (context) => VerfiyPage(),
+          'forgetPassword' : (context) => ForgetPassword(),
+          'resetpassword' : (context) => ResetPassword(),
         },
-        initialRoute: LoginPage.id, // 👈 صفحتك الأساسية
+        initialRoute: LoginPage.id, 
       ),
     );
   }

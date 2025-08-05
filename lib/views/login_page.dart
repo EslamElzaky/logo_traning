@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:logo_app_traning/helper/api_servic.dart';
@@ -21,7 +23,9 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
 
-  final TextEditingController phoneController = TextEditingController();
+  final TextEditingController phoneController = TextEditingController(
+    text: '05',
+  );
   final TextEditingController passwordController = TextEditingController();
 
   bool isLoading = false;
@@ -40,12 +44,31 @@ class _LoginPageState extends State<LoginPage> {
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
+      
 
-        showSnackBar(context, 'تم تسجيل الدخول بنجاح');
+        
+        final user = data['data']['user'];
+
+        final isVerified = user['phoneNumberConfirmed'] == true;
+       
+        debugPrint('🔍 phoneNumberConfirmed: ${user['phoneNumberConfirmed']}');
+
+        log('✅ تسجيل الدخول ناجح. isVerified = $isVerified');
+        if (!isVerified) {
+         
+          Navigator.pushReplacementNamed(
+            context,
+            'verfiyPage',
+            arguments: phoneController.text.trim(),
+          );
+        } else {
+          
+          Navigator.pushReplacementNamed(context, 'homeView');
+        }
+
         return true;
       } else {
         showSnackBar(context, 'فشل تسجيل الدخول: ${response.body}');
-        print(response.body);
         return false;
       }
     } catch (e) {
@@ -96,27 +119,41 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 const SizedBox(height: 30),
-                CostumFormTextField(
+                CustomFormTextField(
                   controller: phoneController,
                   keyboardType: TextInputType.phone,
+                  onChanged: (data) {
+                    if (!data.startsWith('05')) {
+                      phoneController.text = '05';
+                      phoneController.selection = TextSelection.fromPosition(
+                        TextPosition(offset: phoneController.text.length),
+                      );
+                    } else if (data.length > 10) {
+                      phoneController.text = data.substring(0, 10);
+                      phoneController.selection = TextSelection.fromPosition(
+                        TextPosition(offset: phoneController.text.length),
+                      );
+                    }
+                  },
                   labelText: 'رقم الجوال',
                   maxLength: 10,
-                  inputFormatters: [
-                    FilteringTextInputFormatter.digitsOnly,
-                    LengthLimitingTextInputFormatter(10),
-                  ],
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
                       return 'رقم الهاتف مطلوب';
                     }
-                    if (value.trim().length != 10) {
-                      return 'رقم الهاتف يجب أن يكون 10 رقم';
+                    if (!value.startsWith('05')) {
+                      return 'رقم الهاتف يجب أن يبدأ بـ 05';
+                    }
+                    if (value.length != 10) {
+                      return 'رقم الهاتف يجب أن يتكون من 10 أرقام';
                     }
                     return null;
                   },
                 ),
+
                 const SizedBox(height: 20),
-                CostumFormTextField(
+                CustomFormTextField(
                   controller: passwordController,
                   labelText: 'كلمه المرور',
                   obscureText: true,
@@ -137,7 +174,9 @@ class _LoginPageState extends State<LoginPage> {
                       style: TextStyle(color: Colors.black),
                     ),
                     GestureDetector(
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.pushNamed(context, 'forgetPassword');
+                      },
                       child: Text(
                         "اعاده تعيين",
                         style: TextStyle(
@@ -152,10 +191,8 @@ class _LoginPageState extends State<LoginPage> {
                   size: 250,
                   text: 'تسجيل الدخول',
                   onTap: () async {
-                    bool success = await login();
-                    if (success) {
-                      Navigator.pushNamed(context, 'homeView');
-                    }
+                    await login();
+
                     setState(() => isLoading = false);
                   },
                 ),
@@ -196,7 +233,6 @@ class _LoginPageState extends State<LoginPage> {
                     SizedBox(width: 10),
                     GestureDetector(
                       onTap: () {
-                        // Navigator.pushNamed(context, 'verfiyPage');
                         setState(() {
                           isArabic = !isArabic;
                         });
@@ -220,7 +256,7 @@ class _LoginPageState extends State<LoginPage> {
                             width: 22,
                             height: 22,
                             decoration: BoxDecoration(
-                              color: Colors.black, // لون الزر الدائري
+                              color: Colors.black, 
                               shape: BoxShape.circle,
                             ),
                           ),
