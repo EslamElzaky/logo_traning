@@ -45,7 +45,7 @@ class _ResetPasswordState extends State<ResetPassword> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.black, size: 24),
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.pop(context); // بيرجع للصفحة اللي قبلها
           },
         ),
       ),

@@ -30,7 +30,35 @@ class _LoginPageState extends State<LoginPage> {
 
   bool isLoading = false;
   bool isArabic = true;
+  // Future<bool> login() async {
+  //   if (!_formKey.currentState!.validate()) return false;
 
+  //   setState(() => isLoading = true);
+
+  //   try {
+  //     final response = await ApiService().loginUser(
+  //       phoneController.text.trim(),
+  //       passwordController.text.trim(),
+  //     );
+
+  //     if (response.statusCode == 200) {
+  //       final data = jsonDecode(response.body);
+  //       log(data.toString());
+  //       return true;
+
+  //     } else {
+  //       showSnackBar(context, 'فشل تسجيل الدخول: ${response.body}');
+  //       print(response.body);
+  //       return false;
+  //     }
+  //   } catch (e) {
+  //     showSnackBar(context, 'حدث خطأ أثناء تسجيل الدخول');
+  //     print(e);
+  //     return false;
+  //   } finally {
+  //     setState(() => isLoading = false);
+  //   }
+  // }
   Future<bool> login() async {
     if (!_formKey.currentState!.validate()) return false;
 
@@ -44,25 +72,25 @@ class _LoginPageState extends State<LoginPage> {
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-      
+        // debugPrint('📦 استجابة السيرفر:\n${jsonEncode(data)}');
 
-        
+        // قراءة بيانات المستخدم
         final user = data['data']['user'];
 
         final isVerified = user['phoneNumberConfirmed'] == true;
-       
+        // <-- تأكد الاسم صحيح حسب الاستجابة
         debugPrint('🔍 phoneNumberConfirmed: ${user['phoneNumberConfirmed']}');
 
         log('✅ تسجيل الدخول ناجح. isVerified = $isVerified');
         if (!isVerified) {
-         
+          // المستخدم لم يؤكد الرقم → صفحة التحقق
           Navigator.pushReplacementNamed(
             context,
             'verfiyPage',
             arguments: phoneController.text.trim(),
           );
         } else {
-          
+          // المستخدم مفعل → صفحة الهوم
           Navigator.pushReplacementNamed(context, 'homeView');
         }
 
@@ -191,8 +219,8 @@ class _LoginPageState extends State<LoginPage> {
                   size: 250,
                   text: 'تسجيل الدخول',
                   onTap: () async {
-                    await login();
-
+                     await login();
+                   
                     setState(() => isLoading = false);
                   },
                 ),
@@ -256,7 +284,7 @@ class _LoginPageState extends State<LoginPage> {
                             width: 22,
                             height: 22,
                             decoration: BoxDecoration(
-                              color: Colors.black, 
+                              color: Colors.black, // لون الزر الدائري
                               shape: BoxShape.circle,
                             ),
                           ),
