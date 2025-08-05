@@ -13,13 +13,14 @@ class CustomFormTextField extends StatefulWidget {
     this.onChanged,
     this.obscureText = false,
     this.controller,
- 
+
     this.usePassword = false,
     this.onSaved,
     this.initialValue,
     this.validator,
     this.maxLength,
-    this.inputFormatters, this.errorText,
+    this.inputFormatters,
+    this.errorText,
   });
 
   final bool usePassword;
@@ -35,7 +36,7 @@ class CustomFormTextField extends StatefulWidget {
   bool obscureText;
   final Function(String)? onChanged;
   final TextEditingController? controller;
- 
+
   final bool readOnly;
   final void Function(String?)? onSaved;
   final String? Function(String?)? validator;
@@ -46,11 +47,9 @@ class CustomFormTextField extends StatefulWidget {
 }
 
 class _CustomFormTextFieldState extends State<CustomFormTextField> {
-
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      
       style: TextStyle(color: Colors.black),
       inputFormatters: widget.inputFormatters,
       maxLength: widget.maxLength,
@@ -61,11 +60,10 @@ class _CustomFormTextFieldState extends State<CustomFormTextField> {
       maxLines: widget.maxLines,
       cursorColor: Colors.black,
       obscureText: widget.obscureText,
-      readOnly: widget.readOnly ,
-      
+      readOnly: widget.readOnly,
 
       onChanged: widget.onChanged,
-      
+
       validator: (data) {
         if (data?.isEmpty ?? true) {
           //لو هوا فاضي يبقي )(صح ونفذ الريترن)
@@ -79,7 +77,7 @@ class _CustomFormTextFieldState extends State<CustomFormTextField> {
       },
 
       decoration: InputDecoration(
-        errorText:widget.errorText ,
+        errorText: widget.errorText,
         prefixText: widget.prefixText,
         labelText: widget.labelText,
         labelStyle: TextStyle(color: Colors.black, fontSize: 22),

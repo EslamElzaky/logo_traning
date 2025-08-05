@@ -23,10 +23,10 @@ class VerfiyPage extends StatefulWidget {
 class _VerfiyPageState extends State<VerfiyPage> {
   
 
-  final TextEditingController _pinController = TextEditingController();
-  final TextEditingController _captchaInputController = TextEditingController();
+  static TextEditingController pinController = TextEditingController();
+  final TextEditingController captchaInputController = TextEditingController();
 
-  final CaptchaController _captchaController = CaptchaController(length: 6);
+  final CaptchaController captchaController = CaptchaController(length: 6);
 
   @override
   void initState() {
@@ -35,7 +35,7 @@ class _VerfiyPageState extends State<VerfiyPage> {
       OtpCubit.get(context).startTimer();
     });
 
-    _captchaController.regenerate();
+    captchaController.regenerate();
   }
 
  
@@ -43,17 +43,17 @@ class _VerfiyPageState extends State<VerfiyPage> {
   @override
   void dispose() {
    
-    _pinController.dispose();
-    _captchaInputController.dispose();
+    pinController.dispose();
+    captchaInputController.dispose();
     super.dispose();
   }
 
   void _onVerifyPressed() async {
-    final input = _captchaInputController.text.trim();
-    final otpCode = _pinController.text.trim();
+    final input = captchaInputController.text.trim();
+    final otpCode = pinController.text.trim();
 
     
-    bool isValidCaptcha = _captchaController.validate(input);
+    bool isValidCaptcha = captchaController.validate(input);
     if (!isValidCaptcha) {
       showSnackBar(context, 'الكابتشا غير صحيحة');
 
@@ -141,7 +141,7 @@ class _VerfiyPageState extends State<VerfiyPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     appContext: context,
                     length: 6,
-                    controller: _pinController,
+                    controller: pinController,
                     keyboardType: TextInputType.number,
                     animationType: AnimationType.fade,
 
@@ -191,7 +191,7 @@ class _VerfiyPageState extends State<VerfiyPage> {
                                   onTap: () {
                                     log('Resend OTP tapped');
                                     OtpCubit.get(context).resartTimer();
-                                    _captchaController
+                                    captchaController
                                         .regenerate(); 
                                     ApiService().regenerateOtp(phoneNumber);
                                   },
@@ -232,7 +232,7 @@ class _VerfiyPageState extends State<VerfiyPage> {
                   children: [
                     CaptchaWidget(
                       width: 240,
-                      controller: _captchaController,
+                      controller: captchaController,
                       theme: CaptchaTheme(
                         scribbleIntensity: 2.0,
                         scribbleColors: [
@@ -251,8 +251,8 @@ class _VerfiyPageState extends State<VerfiyPage> {
                       icon: const Icon(Icons.refresh, color: Colors.black),
                       onPressed: () {
                         setState(() {
-                          _captchaController.regenerate();
-                          _captchaInputController.clear();
+                          captchaController.regenerate();
+                          captchaInputController.clear();
                         });
                       },
                     ),
@@ -260,7 +260,7 @@ class _VerfiyPageState extends State<VerfiyPage> {
                 ),
                 const SizedBox(height: 40),
                 CustomFormTextField(
-                  controller: _captchaInputController,
+                  controller: captchaInputController,
                   labelText: 'اكتب الحروف الظاهرة بالأعلى',
                 ),
 

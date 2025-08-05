@@ -12,9 +12,7 @@ class ApiService {
     'Accept': 'application/json',
   };
   Future<http.Response> registerUser(SignUpUserPost user) async {
-    final url = Uri.parse(
-      '$baseUrl/ar/Account/Register',
-    ); 
+    final url = Uri.parse('$baseUrl/ar/Account/Register');
     final response = await http.post(
       url,
       headers: headers,
@@ -32,8 +30,8 @@ class ApiService {
     );
     return response;
   }
-  
-Future<http.Response> verifyOtp(String phoneNumber, String otp) async {
+
+  Future<http.Response> verifyOtp(String phoneNumber, String otp) async {
     final url = Uri.parse('$baseUrl/ar/Account/VerifyCode');
     final response = await http.post(
       url,
@@ -51,9 +49,20 @@ Future<http.Response> verifyOtp(String phoneNumber, String otp) async {
       body: jsonEncode({'phoneNumber': phoneNumber}),
     );
     log('Regenerate OTP response: ${response.body}');
-                                 
+
     return response;
   }
 
+  Future<http.Response> forgetPassword(String phoneNumber) async {
+    final url = Uri.parse('$baseUrl/ar/Account/ForgetPassword');
+    final response = await http.post(
+      url,
+      headers: headers,
+      body: jsonEncode({'phoneNumber': phoneNumber}),
+    );
+    log('Forget Password response: ${response.body}');
+    return response;
+  }
 
+  // Future<http.Response> resetPassword(){};
 }

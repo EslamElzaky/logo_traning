@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logo_app_traning/Cubit/otp_cubit.dart';
+import 'package:logo_app_traning/views/forget_password.dart';
 import 'package:logo_app_traning/views/home_view.dart';
 import 'package:logo_app_traning/views/login_page.dart';
 import 'package:logo_app_traning/views/regester_page.dart';
 
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:logo_app_traning/views/reset_password.dart';
 import 'package:logo_app_traning/views/verfiy_page.dart';
 
 void main() {
@@ -41,6 +43,8 @@ class MyApp extends StatelessWidget {
           'loginpage': (context) => LoginPage(),
           'homeView': (context) => HomeView(),
           'verfiyPage': (context) => VerfiyPage(),
+          'forgetPassword' : (context) => ForgetPassword(),
+          'resetpassword' : (context) => ResetPassword(),
         },
         initialRoute: LoginPage.id, 
       ),

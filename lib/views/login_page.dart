@@ -24,42 +24,12 @@ class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
 
   final TextEditingController phoneController = TextEditingController(
-    text: '050',
+    text: '05',
   );
   final TextEditingController passwordController = TextEditingController();
 
   bool isLoading = false;
   bool isArabic = true;
-  Future<bool> login() async {
-    if (!_formKey.currentState!.validate()) return false;
-
-    setState(() => isLoading = true);
-
-    try {
-      final response = await ApiService().loginUser(
-        phoneController.text.trim(),
-        passwordController.text.trim(),
-      );
-
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        log(data.toString());
-        return true;
-       
-      } else {
-        showSnackBar(context, 'فشل تسجيل الدخول: ${response.body}');
-        print(response.body);
-        return false;
-      }
-    } catch (e) {
-      showSnackBar(context, 'حدث خطأ أثناء تسجيل الدخول');
-      print(e);
-      return false;
-    } finally {
-      setState(() => isLoading = false);
-    }
-  }
-
   // Future<bool> login() async {
   //   if (!_formKey.currentState!.validate()) return false;
 
@@ -73,9 +43,9 @@ class _LoginPageState extends State<LoginPage> {
 
   //     if (response.statusCode == 200) {
   //       final data = jsonDecode(response.body);
-
-  //       showSnackBar(context, 'تم تسجيل الدخول بنجاح');
+  //       log(data.toString());
   //       return true;
+
   //     } else {
   //       showSnackBar(context, 'فشل تسجيل الدخول: ${response.body}');
   //       print(response.body);
@@ -89,6 +59,54 @@ class _LoginPageState extends State<LoginPage> {
   //     setState(() => isLoading = false);
   //   }
   // }
+  Future<bool> login() async {
+    if (!_formKey.currentState!.validate()) return false;
+
+    setState(() => isLoading = true);
+
+    try {
+      final response = await ApiService().loginUser(
+        phoneController.text.trim(),
+        passwordController.text.trim(),
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        // debugPrint('📦 استجابة السيرفر:\n${jsonEncode(data)}');
+
+        // قراءة بيانات المستخدم
+        final user = data['data']['user'];
+
+        final isVerified = user['phoneNumberConfirmed'] == true;
+        // <-- تأكد الاسم صحيح حسب الاستجابة
+        debugPrint('🔍 phoneNumberConfirmed: ${user['phoneNumberConfirmed']}');
+
+        log('✅ تسجيل الدخول ناجح. isVerified = $isVerified');
+        if (!isVerified) {
+          // المستخدم لم يؤكد الرقم → صفحة التحقق
+          Navigator.pushReplacementNamed(
+            context,
+            'verfiyPage',
+            arguments: phoneController.text.trim(),
+          );
+        } else {
+          // المستخدم مفعل → صفحة الهوم
+          Navigator.pushReplacementNamed(context, 'homeView');
+        }
+
+        return true;
+      } else {
+        showSnackBar(context, 'فشل تسجيل الدخول: ${response.body}');
+        return false;
+      }
+    } catch (e) {
+      showSnackBar(context, 'حدث خطأ أثناء تسجيل الدخول');
+      print(e);
+      return false;
+    } finally {
+      setState(() => isLoading = false);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -133,8 +151,8 @@ class _LoginPageState extends State<LoginPage> {
                   controller: phoneController,
                   keyboardType: TextInputType.phone,
                   onChanged: (data) {
-                    if (!data.startsWith('050')) {
-                      phoneController.text = '050';
+                    if (!data.startsWith('05')) {
+                      phoneController.text = '05';
                       phoneController.selection = TextSelection.fromPosition(
                         TextPosition(offset: phoneController.text.length),
                       );
@@ -152,8 +170,8 @@ class _LoginPageState extends State<LoginPage> {
                     if (value == null || value.trim().isEmpty) {
                       return 'رقم الهاتف مطلوب';
                     }
-                    if (!value.startsWith('050')) {
-                      return 'رقم الهاتف يجب أن يبدأ بـ 050';
+                    if (!value.startsWith('05')) {
+                      return 'رقم الهاتف يجب أن يبدأ بـ 05';
                     }
                     if (value.length != 10) {
                       return 'رقم الهاتف يجب أن يتكون من 10 أرقام';
@@ -184,7 +202,9 @@ class _LoginPageState extends State<LoginPage> {
                       style: TextStyle(color: Colors.black),
                     ),
                     GestureDetector(
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.pushNamed(context, 'forgetPassword');
+                      },
                       child: Text(
                         "اعاده تعيين",
                         style: TextStyle(
@@ -199,10 +219,8 @@ class _LoginPageState extends State<LoginPage> {
                   size: 250,
                   text: 'تسجيل الدخول',
                   onTap: () async {
-                    bool success = await login();
-                    if (success) {
-                      Navigator.pushNamed(context, 'homeView');
-                    }
+                     await login();
+                   
                     setState(() => isLoading = false);
                   },
                 ),

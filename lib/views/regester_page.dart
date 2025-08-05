@@ -18,7 +18,7 @@ class RegesterPage extends StatefulWidget {
 
 class _RegesterPageState extends State<RegesterPage> {
   final TextEditingController phoneController = TextEditingController(
-    text: '050',
+    text: '05',
   );
   final TextEditingController emailController = TextEditingController();
   final TextEditingController firstNameController = TextEditingController();
@@ -153,8 +153,8 @@ class _RegesterPageState extends State<RegesterPage> {
                   controller: phoneController,
                   keyboardType: TextInputType.phone,
                   onChanged: (data) {
-                    if (!data.startsWith('050')) {
-                      phoneController.text = '050';
+                    if (!data.startsWith('05')) {
+                      phoneController.text = '05';
                       phoneController.selection = TextSelection.fromPosition(
                         TextPosition(offset: phoneController.text.length),
                       );
@@ -174,8 +174,8 @@ class _RegesterPageState extends State<RegesterPage> {
                     if (value == null || value.trim().isEmpty) {
                       return 'رقم الهاتف مطلوب';
                     }
-                    if (!value.startsWith('050')) {
-                      return 'رقم الهاتف يجب أن يبدأ بـ 050';
+                    if (!value.startsWith('05')) {
+                      return 'رقم الهاتف يجب أن يبدأ بـ 05';
                     }
                     if (value.length != 10) {
                       return 'رقم الهاتف يجب أن يتكون من 10 أرقام';
@@ -246,7 +246,7 @@ class _RegesterPageState extends State<RegesterPage> {
                       );
                       Navigator.pushNamed(
                         context,
-                        'verfiyPage',
+                        'homeView',
                         arguments: phoneController.text.trim(),
                       );
                     }
