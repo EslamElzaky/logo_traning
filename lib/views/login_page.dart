@@ -63,7 +63,7 @@ class _LoginPageState extends State<LoginPage> {
   //     setState(() => isLoading = false);
   //   }
   // }
-  
+
   Future<bool> login() async {
     if (!_formKey.currentState!.validate()) return false;
 
@@ -88,7 +88,7 @@ class _LoginPageState extends State<LoginPage> {
 
         log('✅ تسجيل الدخول ناجح. isVerified = $isVerified');
         if (!isVerified) {
-          await ApiService().verifyOtp(phoneController.text.trim(),otp);
+          await ApiService().regenerateOtp(phoneController.text.trim());
           // المستخدم لم يؤكد الرقم → صفحة التحقق
           Navigator.pushReplacementNamed(
             context,

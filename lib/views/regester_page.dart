@@ -62,9 +62,10 @@ class _RegesterPageState extends State<RegesterPage> {
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         showSnackBar(context, 'تم تسجيل الدخول بنجاح');
+        await ApiService().regenerateOtp(phoneController.text.trim());
         Navigator.pushNamed(
           context,
-          'homeView',
+          'verfiyPage',
           arguments: phoneController.text.trim(),
         );
 
