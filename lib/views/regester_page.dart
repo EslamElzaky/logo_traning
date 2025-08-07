@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:logo_app_traning/generated/l10n.dart';
 import 'package:logo_app_traning/helper/api_servic.dart';
 import 'package:logo_app_traning/helper/custom_button.dart';
 import 'package:logo_app_traning/helper/custom_snack_bar.dart';
@@ -95,7 +96,7 @@ class _RegesterPageState extends State<RegesterPage> {
                 ),
                 SizedBox(height: 20),
                 Text(
-                  'إنشاء حساب جديد',
+                  S.of(context).title,
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
@@ -103,7 +104,7 @@ class _RegesterPageState extends State<RegesterPage> {
                   ),
                 ),
                 Text(
-                  'يرجي ادخال البيانات الاتيه',
+                  S.of(context).subtitle,
                   style: TextStyle(
                     fontSize: 20,
                     color: Colors.black.withOpacity(0.5),
@@ -115,7 +116,7 @@ class _RegesterPageState extends State<RegesterPage> {
                   onChanged: (data) {
                     firstName = data;
                   },
-                  labelText: 'الاسم الاول',
+                  labelText: S.of(context).first_name,
                   inputFormatters: [
                     FilteringTextInputFormatter.allow(
                       RegExp(r'[a-zA-Z\u0621-\u064A\s]'),
@@ -128,7 +129,7 @@ class _RegesterPageState extends State<RegesterPage> {
                   onChanged: (data) {
                     midName = data;
                   },
-                  labelText: 'الاسم الاوسط',
+                  labelText: S.of(context).middle_name,
                   inputFormatters: [
                     FilteringTextInputFormatter.allow(
                       RegExp(r'[a-zA-Z\u0621-\u064A\s]'),
@@ -141,7 +142,7 @@ class _RegesterPageState extends State<RegesterPage> {
                   onChanged: (data) {
                     lastName = data;
                   },
-                  labelText: 'الاسم الاخير',
+                  labelText: S.of(context).last_name,
                   inputFormatters: [
                     FilteringTextInputFormatter.allow(
                       RegExp(r'[a-zA-Z\u0621-\u064A\s]'),
@@ -167,7 +168,7 @@ class _RegesterPageState extends State<RegesterPage> {
                       userName = data;
                     }
                   },
-                  labelText: 'رقم الجوال',
+                  labelText: S.of(context).phone_number,
                   maxLength: 10,
                   inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                   validator: (value) {
@@ -190,7 +191,7 @@ class _RegesterPageState extends State<RegesterPage> {
                   onChanged: (data) {
                     email = data;
                   },
-                  labelText: 'البريد الالكتروني',
+                  labelText: S.of(context).email,
                   validator: (data) {
                     if (data == null || data.trim().isEmpty) {
                       return 'يجب ادخال الايميل';
@@ -210,7 +211,7 @@ class _RegesterPageState extends State<RegesterPage> {
                   onChanged: (data) {
                     password = data;
                   },
-                  labelText: 'الباسورد',
+                  labelText: S.of(context).password,
                   obscureText: true,
                   usePassword: true,
                 ),
@@ -229,7 +230,7 @@ class _RegesterPageState extends State<RegesterPage> {
                       });
                     }
                   },
-                  labelText: 'تاكيد الباسورد',
+                  labelText: S.of(context).confirm_password,
                   obscureText: true,
                   usePassword: true,
                   errorText: passwordError,
@@ -237,7 +238,7 @@ class _RegesterPageState extends State<RegesterPage> {
                 SizedBox(height: 40),
                 CustomButton(
                   size: 200,
-                  text: 'انشاء حساب',
+                  text: S.of(context).create_account,
                   onTap: () async {
                     bool success = await register();
                     if (success) {
@@ -257,7 +258,7 @@ class _RegesterPageState extends State<RegesterPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      'لديك حساب بالفعل؟',
+                      S.of(context).already_have_account,
                       style: TextStyle(color: Colors.black),
                     ),
                     GestureDetector(
@@ -265,7 +266,7 @@ class _RegesterPageState extends State<RegesterPage> {
                         Navigator.pushNamed(context, LoginPage.id);
                       },
                       child: Text(
-                        ' تسجيل الدخول',
+                        S.of(context).login,
                         style: TextStyle(
                           color: Color.fromARGB(255, 8, 220, 181),
                         ),

@@ -1,0 +1,19 @@
+{
+    "title": "Create a New Account",
+    "subtitle": "enter Youer information",
+    "first_name": "First Name",
+    "middle_name": "Middle Name",
+    "last_name": "Last Name",
+    "email": "Email",
+    "phone_number": "Phone Number",
+    "password": "Password",
+    "confirm_password": "Confirm Password",
+    "create_account": "Create Account",
+    "already_have_account": "Already have an account?",
+    "login": "Login",
+    "subLogin": " enter phone number and password",
+    "forgot_password": "Forgot Password?",
+    "reset_password": "Reset Password",
+    "no_account": "Don't have an account?",
+    "skip": "Skip for Now"
+}
