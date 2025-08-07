@@ -62,6 +62,11 @@ class _RegesterPageState extends State<RegesterPage> {
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         showSnackBar(context, 'تم تسجيل الدخول بنجاح');
+        Navigator.pushNamed(
+          context,
+          'homeView',
+          arguments: phoneController.text.trim(),
+        );
 
         return true;
       } else {
@@ -240,17 +245,8 @@ class _RegesterPageState extends State<RegesterPage> {
                   size: 200,
                   text: S.of(context).create_account,
                   onTap: () async {
-                    bool success = await register();
-                    if (success) {
-                      await ApiService().regenerateOtp(
-                        phoneController.text.trim(),
-                      );
-                      Navigator.pushNamed(
-                        context,
-                        'homeView',
-                        arguments: phoneController.text.trim(),
-                      );
-                    }
+                    await register();
+                   
                     setState(() => isLoading = false);
                   },
                 ),

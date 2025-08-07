@@ -50,6 +50,7 @@ class _CustomFormTextFieldState extends State<CustomFormTextField> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       style: TextStyle(color: Colors.black),
       inputFormatters: widget.inputFormatters,
       maxLength: widget.maxLength,

@@ -72,11 +72,11 @@ class ApiService {
 
   Future<http.Response> verifyOtp(String phoneNumber, String otp) async {
     final url = Uri.parse('$baseUrl/ar/Account/VerifyCode');
-    final body = {'userName': phoneNumber, 'otp': otp};
+    final body = {'phoneNumber': phoneNumber, 'code': otp};
     final response = await http.post(
       url,
       headers: headers,
-      body: jsonEncode({'userName': phoneNumber, 'otp': otp}),
+      body: jsonEncode(body),
     );
     requestLog(
       url: url.toString(),
