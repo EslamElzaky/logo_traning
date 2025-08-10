@@ -188,6 +188,16 @@ class S {
   String get skip {
     return Intl.message('Skip for Now', name: 'skip', desc: '', args: []);
   }
+
+  /// ` is Required`
+  String get required {
+    return Intl.message(' is Required', name: 'required', desc: '', args: []);
+  }
+
+  /// `Field `
+  String get field {
+    return Intl.message('Field ', name: 'field', desc: '', args: []);
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

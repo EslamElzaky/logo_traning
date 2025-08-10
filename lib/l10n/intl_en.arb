@@ -15,5 +15,7 @@
     "forgot_password": "Forgot Password?",
     "reset_password": "Reset Password",
     "no_account": "Don't have an account?",
-    "skip": "Skip for Now"
+    "skip": "Skip for Now",
+    "required": " is Required",
+    "field": "Field "
 }

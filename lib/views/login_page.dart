@@ -28,7 +28,7 @@ class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
 
   final TextEditingController phoneController = TextEditingController(
-    text: '05',
+    text: '050',
   );
   final TextEditingController passwordController = TextEditingController();
 
@@ -95,6 +95,7 @@ class _LoginPageState extends State<LoginPage> {
             'verfiyPage',
             arguments: phoneController.text.trim(),
           );
+          showSnackBar(context, 'تم تسجيل الدخول بنجاح', Colors.green);
         } else {
           // المستخدم مفعل → صفحة الهوم
           Navigator.pushReplacementNamed(context, 'homeView');
@@ -102,11 +103,11 @@ class _LoginPageState extends State<LoginPage> {
 
         return true;
       } else {
-        showSnackBar(context, 'فشل تسجيل الدخول: ${response.body}');
+        showSnackBar(context, 'فشل تسجيل الدخول: ${response.body}', Colors.red);
         return false;
       }
     } catch (e) {
-      showSnackBar(context, 'حدث خطأ أثناء تسجيل الدخول');
+      showSnackBar(context, 'حدث خطأ أثناء تسجيل الدخول', Colors.orange);
       print(e);
       return false;
     } finally {
@@ -158,8 +159,8 @@ class _LoginPageState extends State<LoginPage> {
                     controller: phoneController,
                     keyboardType: TextInputType.phone,
                     onChanged: (data) {
-                      if (!data.startsWith('05')) {
-                        phoneController.text = '05';
+                      if (!data.startsWith('050')) {
+                        phoneController.text = '050';
                         phoneController.selection = TextSelection.fromPosition(
                           TextPosition(offset: phoneController.text.length),
                         );
@@ -174,13 +175,7 @@ class _LoginPageState extends State<LoginPage> {
                     maxLength: 10,
                     inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                     validator: (value) {
-                      if (value == null || value.trim().isEmpty) {
-                        return 'رقم الهاتف مطلوب';
-                      }
-                      if (!value.startsWith('05')) {
-                        return 'رقم الهاتف يجب أن يبدأ بـ 05';
-                      }
-                      if (value.length != 10) {
+                      if (value!.length < 10) {
                         return 'رقم الهاتف يجب أن يتكون من 10 أرقام';
                       }
                       return null;

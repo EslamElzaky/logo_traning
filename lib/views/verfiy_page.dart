@@ -38,11 +38,8 @@ class _VerfiyPageState extends State<VerfiyPage> {
     captchaController.regenerate();
   }
 
- 
-
   @override
   void dispose() {
-   
     pinController.dispose();
     captchaInputController.dispose();
     super.dispose();
@@ -52,43 +49,34 @@ class _VerfiyPageState extends State<VerfiyPage> {
     final input = captchaInputController.text.trim();
     final otpCode = pinController.text.trim();
 
-    
     bool isValidCaptcha = captchaController.validate(input);
     if (!isValidCaptcha) {
-      showSnackBar(context, 'الكابتشا غير صحيحة');
-
+      showSnackBar(context, 'الكابتشا غير صحيحة', Colors.red);
       return;
     }
-
     if (otpCode.length != 6) {
-      showSnackBar(context, 'من فضلك أدخل رمز التحقق الكامل');
-
+      showSnackBar(context, 'من فضلك أدخل رمز التحقق الكامل',Colors.yellow);
       return;
     }
-
     final phoneNumber = ModalRoute.of(context)!.settings.arguments as String;
     try {
       final response = await ApiService().verifyOtp(phoneNumber, otpCode);
-
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         final success = data['isSuccess'] ?? false;
-
         if (success) {
-          showSnackBar(context, 'تم التحقق بنجاح');
-
+          showSnackBar(context, 'تم التحقق بنجاح', Colors.green);
           Navigator.pushReplacementNamed(context, 'homeView'); // مثال
         } else {
-          showSnackBar(context, ' فشل التحقق: ${data["message"] ?? "حدث خطأ"}');
+          showSnackBar(context, ' فشل التحقق: ${data["message"] ?? "حدث خطأ"}', Colors.red);
         }
       } else {
-        showSnackBar(context, ' فشل الاتصال: ${response.statusCode}');
+        showSnackBar(context, ' فشل الاتصال: ${response.statusCode}',Colors.orange);
       }
     } catch (e) {
-      showSnackBar(context, ' خطأ أثناء التحقق: $e');
+      showSnackBar(context, ' خطأ أثناء التحقق: $e',Colors.deepOrangeAccent);
     }
   }
-
   @override
   Widget build(BuildContext context) {
     final String phoneNumber =
@@ -131,9 +119,7 @@ class _VerfiyPageState extends State<VerfiyPage> {
                     Text("  تغيير", style: TextStyle(color: Colors.blue)),
                   ],
                 ),
-                const SizedBox(height: 16),
-
-               
+                const SizedBox(height: 16),            
                 Directionality(
                   textDirection: TextDirection.ltr,
                   child: PinCodeTextField(
@@ -144,7 +130,6 @@ class _VerfiyPageState extends State<VerfiyPage> {
                     controller: pinController,
                     keyboardType: TextInputType.number,
                     animationType: AnimationType.fade,
-
                     pinTheme: PinTheme(
                       shape: PinCodeFieldShape.box,
                       borderRadius: BorderRadius.circular(8),

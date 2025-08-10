@@ -30,6 +30,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "create_account": MessageLookupByLibrary.simpleMessage("Create Account"),
     "email": MessageLookupByLibrary.simpleMessage("Email"),
+    "field": MessageLookupByLibrary.simpleMessage("Field "),
     "first_name": MessageLookupByLibrary.simpleMessage("First Name"),
     "forgot_password": MessageLookupByLibrary.simpleMessage("Forgot Password?"),
     "last_name": MessageLookupByLibrary.simpleMessage("Last Name"),
@@ -40,6 +41,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "password": MessageLookupByLibrary.simpleMessage("Password"),
     "phone_number": MessageLookupByLibrary.simpleMessage("Phone Number"),
+    "required": MessageLookupByLibrary.simpleMessage(" is Required"),
     "reset_password": MessageLookupByLibrary.simpleMessage("Reset Password"),
     "skip": MessageLookupByLibrary.simpleMessage("Skip for Now"),
     "subLogin": MessageLookupByLibrary.simpleMessage(

@@ -15,5 +15,7 @@
     "forgot_password" : "نسيت كلمة المرور؟",
     "reset_password" : "اعاده تعيين ",
     "no_account" : "ليس لديك حساب بالفعل ؟ ",
-    "skip" : "تخطي الان"
+    "skip" : "تخطي الان",
+    "required" : " مطلوب",
+    "field" : " حقل  "
 }

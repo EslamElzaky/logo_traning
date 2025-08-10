@@ -30,6 +30,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "create_account": MessageLookupByLibrary.simpleMessage("انشاء حساب"),
     "email": MessageLookupByLibrary.simpleMessage("البريد الالكتروني"),
+    "field": MessageLookupByLibrary.simpleMessage(" حقل  "),
     "first_name": MessageLookupByLibrary.simpleMessage("الاسم الاول"),
     "forgot_password": MessageLookupByLibrary.simpleMessage(
       "نسيت كلمة المرور؟",
@@ -42,6 +43,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "password": MessageLookupByLibrary.simpleMessage("كلمة المرور"),
     "phone_number": MessageLookupByLibrary.simpleMessage("رقم الجوال"),
+    "required": MessageLookupByLibrary.simpleMessage(" مطلوب"),
     "reset_password": MessageLookupByLibrary.simpleMessage("اعاده تعيين "),
     "skip": MessageLookupByLibrary.simpleMessage("تخطي الان"),
     "subLogin": MessageLookupByLibrary.simpleMessage(

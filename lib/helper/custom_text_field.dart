@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:logo_app_traning/generated/l10n.dart';
 
 class CustomFormTextField extends StatefulWidget {
   CustomFormTextField({
@@ -68,7 +69,7 @@ class _CustomFormTextFieldState extends State<CustomFormTextField> {
       validator: (data) {
         if (data?.isEmpty ?? true) {
           
-          return 'Field is required';
+          return  S.of(context).field + widget.labelText! + S.of(context).required; 
         } 
         if (widget.validator != null) {
           return widget.validator!(data);

@@ -19,7 +19,7 @@ class RegesterPage extends StatefulWidget {
 
 class _RegesterPageState extends State<RegesterPage> {
   final TextEditingController phoneController = TextEditingController(
-    text: '05',
+    text: '050',
   );
   final TextEditingController emailController = TextEditingController();
   final TextEditingController firstNameController = TextEditingController();
@@ -53,7 +53,7 @@ class _RegesterPageState extends State<RegesterPage> {
         userName: phoneController.text.trim(),
       );
       if (passwordController.text != confirmPasswordController.text) {
-        showSnackBar(context, 'كلمة المرور وتأكيد كلمة المرور غير متطابقتين');
+        showSnackBar(context, 'كلمة المرور وتأكيد كلمة المرور غير متطابقتين', Colors.yellow);
         setState(() => isLoading = false);
         return false;
       }
@@ -61,7 +61,7 @@ class _RegesterPageState extends State<RegesterPage> {
       final response = await ApiService().registerUser(user);
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        showSnackBar(context, 'تم تسجيل الدخول بنجاح');
+        showSnackBar(context, 'تم تسجيل الدخول بنجاح', Colors.green);
         await ApiService().regenerateOtp(phoneController.text.trim());
         Navigator.pushNamed(
           context,
@@ -71,7 +71,7 @@ class _RegesterPageState extends State<RegesterPage> {
 
         return true;
       } else {
-        showSnackBar(context, 'فشل تسجيل الدخول: ${response.body}');
+        showSnackBar(context, 'فشل تسجيل الدخول: ${response.body}', Colors.red);
         return false;
       }
     }
@@ -160,8 +160,8 @@ class _RegesterPageState extends State<RegesterPage> {
                   controller: phoneController,
                   keyboardType: TextInputType.phone,
                   onChanged: (data) {
-                    if (!data.startsWith('05')) {
-                      phoneController.text = '05';
+                    if (!data.startsWith('050')) {
+                      phoneController.text = '050';
                       phoneController.selection = TextSelection.fromPosition(
                         TextPosition(offset: phoneController.text.length),
                       );
@@ -181,8 +181,8 @@ class _RegesterPageState extends State<RegesterPage> {
                     if (value == null || value.trim().isEmpty) {
                       return 'رقم الهاتف مطلوب';
                     }
-                    if (!value.startsWith('05')) {
-                      return 'رقم الهاتف يجب أن يبدأ بـ 05';
+                    if (!value.startsWith('050')) {
+                      return 'رقم الهاتف يجب أن يبدأ بـ 050';
                     }
                     if (value.length != 10) {
                       return 'رقم الهاتف يجب أن يتكون من 10 أرقام';
