@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:logo_app_traning/generated/l10n.dart';
@@ -24,9 +26,10 @@ class _ForgetPasswordState extends State<ForgetPassword> {
       final response = await ApiService().forgetPassword(
         phoneController.text.trim(),
       );
-
+      final data = jsonDecode(response.body);
       if (response.statusCode == 200) {
-         await ApiService().regenerateOtp(phoneController.text.trim());
+        await ApiService().regenerateOtp(phoneController.text.trim());
+
         Navigator.pushNamed(
           context,
           'resetpassword',
@@ -34,7 +37,9 @@ class _ForgetPasswordState extends State<ForgetPassword> {
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('فشل في إرسال رمز التحقق: ${response.body}')),
+          SnackBar(
+            content: Text(data["message"] ?? 'فشل في إرسال رمز التحقق:'),
+          ),
         );
       }
     } catch (e) {
@@ -95,51 +100,49 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                   ),
                 ),
                 SizedBox(height: 60),
-             CustomFormTextField(
-                    controller: phoneController,
-                    keyboardType: TextInputType.phone,
-                    onChanged: (data) {
-                      if (!data.startsWith('05')) {
-                        phoneController.text = '05';
-                      }
-                     
+                CustomFormTextField(
+                  controller: phoneController,
+                  keyboardType: TextInputType.phone,
+                  onChanged: (data) {
+                    if (!data.startsWith('05')) {
+                      phoneController.text = '05';
+                    }
+
+                    phoneController.selection = TextSelection.fromPosition(
+                      TextPosition(offset: phoneController.text.length),
+                    );
+                    if (phoneController.text.length > 10) {
+                      phoneController.text = phoneController.text.substring(
+                        0,
+                        10,
+                      );
                       phoneController.selection = TextSelection.fromPosition(
                         TextPosition(offset: phoneController.text.length),
                       );
-                      if (phoneController.text.length > 10) {
-                        phoneController.text = phoneController.text.substring(
-                          0,
-                          10,
-                        );
-                        phoneController.selection = TextSelection.fromPosition(
-                          TextPosition(offset: phoneController.text.length),
-                        );
+                    }
+                  },
+                  labelText: S.of(context).phone_number,
+                  maxLength: 10,
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                  validator: (value) {
+                    if (value!.length >= 3) {
+                      String thirdDigit = value[2];
+                      if (thirdDigit == '0' || thirdDigit == '2') {
+                        return S.of(context).valaidat_num2 + thirdDigit;
                       }
-                    },
-                    labelText: S.of(context).phone_number,
-                    maxLength: 10,
-                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                    validator: (value) {
-                  
-                      if (value!.length >= 3) {
-                        String thirdDigit = value[2];
-                        if (thirdDigit == '0' || thirdDigit == '2') {
-                          return S.of(context).valaidat_num2 +thirdDigit;
-                        }
-                      }
-                      if (value.length < 10) {
-                        return S.of(context).valaidat_num1;
-                      }
-                      return null;
-                    },
-                  ),
+                    }
+                    if (value.length < 10) {
+                      return S.of(context).valaidat_num1;
+                    }
+                    return null;
+                  },
+                ),
                 SizedBox(height: 30),
                 CustomButton(
                   size: 200,
                   text: S.of(context).send,
                   onTap: () {
                     _forgetPassword();
-                    
                   },
                 ),
               ],

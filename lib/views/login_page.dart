@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:logo_app_traning/Cubit/translate/translate_cubit.dart';
+import 'package:logo_app_traning/generated/intl/messages_ar.dart';
 import 'package:logo_app_traning/generated/l10n.dart';
 import 'package:logo_app_traning/helper/api_servic.dart';
 import 'package:logo_app_traning/helper/custom_button.dart';
@@ -40,11 +41,10 @@ class _LoginPageState extends State<LoginPage> {
       final response = await ApiService().loginUser(
         phoneController.text.trim(),
         passwordController.text.trim(),
+        
       );
-
+      final data = jsonDecode(response.body);
       if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-
         final user = data['data']['user'];
 
         final isVerified = user['phoneNumberConfirmed'] == true;
@@ -60,7 +60,7 @@ class _LoginPageState extends State<LoginPage> {
             'verfiyPage',
             arguments: phoneController.text.trim(),
           );
-          showSnackBar(context, 'تم تسجيل الدخول بنجاح', Colors.greenAccent);
+          showSnackBar(context, data["message"]??'تم تسجيل الدخول بنجاح', Colors.greenAccent);
         } else {
           // المستخدم مفعل → صفحة الهوم
           Navigator.pushReplacementNamed(context, 'homeView');
@@ -68,7 +68,7 @@ class _LoginPageState extends State<LoginPage> {
 
         return true;
       } else {
-        showSnackBar(context, 'فشل تسجيل الدخول: ${response.body}', Colors.red);
+        showSnackBar(context, data["message"]??'فشل تسجيل  الدخول', Colors.red);
         return false;
       }
     } catch (e) {
@@ -127,7 +127,7 @@ class _LoginPageState extends State<LoginPage> {
                       if (!data.startsWith('05')) {
                         phoneController.text = '05';
                       }
-                     
+
                       phoneController.selection = TextSelection.fromPosition(
                         TextPosition(offset: phoneController.text.length),
                       );
@@ -145,12 +145,11 @@ class _LoginPageState extends State<LoginPage> {
                     maxLength: 10,
                     inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                     validator: (value) {
-                  
                       if (value!.length >= 3) {
                         String thirdDigit = value[2];
                         log(thirdDigit);
                         if (thirdDigit == '0' || thirdDigit == '2') {
-                          return S.of(context).valaidat_num2 +thirdDigit;
+                          return S.of(context).valaidat_num2 + thirdDigit;
                         }
                       }
                       if (value.length < 10) {
@@ -228,7 +227,7 @@ class _LoginPageState extends State<LoginPage> {
 
                   GestureDetector(
                     onTap: () {
-                      Navigator.pushNamed(context,'homeView' );
+                      Navigator.pushReplacementNamed(context, 'homeView');
                     },
                     child: Text(
                       S.of(context).skip,

@@ -8,6 +8,8 @@ import 'package:logo_app_traning/helper/custom_text_field.dart';
 import 'package:logo_app_traning/model/regester_model.dart';
 import 'package:logo_app_traning/views/login_page.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
+import 'dart:convert';
+
 
 class RegesterPage extends StatefulWidget {
   const RegesterPage({super.key});
@@ -59,6 +61,7 @@ class _RegesterPageState extends State<RegesterPage> {
       }
 
       final response = await ApiService().registerUser(user);
+      final data = jsonDecode(response.body);
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         showSnackBar(context, 'تم تسجيل الدخول بنجاح', Colors.green);
@@ -71,7 +74,7 @@ class _RegesterPageState extends State<RegesterPage> {
 
         return true;
       } else {
-        showSnackBar(context, 'فشل تسجيل الدخول: ${response.body}', Colors.red);
+        showSnackBar(context, data["message"]??'فشل تسجيل الدخول', Colors.red);
         return false;
       }
     }
