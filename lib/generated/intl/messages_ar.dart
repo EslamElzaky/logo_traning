@@ -25,26 +25,54 @@ class MessageLookup extends MessageLookupByLibrary {
     "already_have_account": MessageLookupByLibrary.simpleMessage(
       "هل لديك حساب بالفعل؟",
     ),
+    "capatcha_label": MessageLookupByLibrary.simpleMessage(
+      "اكتب الحروف الظاهرة بالأعلى",
+    ),
+    "change": MessageLookupByLibrary.simpleMessage("تغيير"),
+    "conf_new_pass": MessageLookupByLibrary.simpleMessage(
+      " تاكيد كلمه المرور الجديده ",
+    ),
     "confirm_password": MessageLookupByLibrary.simpleMessage(
       "تأكيد كلمة المرور",
     ),
+    "correct_email": MessageLookupByLibrary.simpleMessage(
+      "من فضلك ادخل الايميل بشكل صحيح",
+    ),
     "create_account": MessageLookupByLibrary.simpleMessage("انشاء حساب"),
     "email": MessageLookupByLibrary.simpleMessage("البريد الالكتروني"),
+    "enter_email": MessageLookupByLibrary.simpleMessage("يجب ادخال الايميل"),
     "field": MessageLookupByLibrary.simpleMessage(" حقل  "),
     "first_name": MessageLookupByLibrary.simpleMessage("الاسم الاول"),
+    "forget_pass": MessageLookupByLibrary.simpleMessage("نسيت كلمه المرور"),
     "forgot_password": MessageLookupByLibrary.simpleMessage(
       "نسيت كلمة المرور؟",
     ),
     "last_name": MessageLookupByLibrary.simpleMessage("الاسم الاخير"),
     "login": MessageLookupByLibrary.simpleMessage("تسجيل الدخول"),
     "middle_name": MessageLookupByLibrary.simpleMessage("الاسم الاوسط"),
+    "new_pass": MessageLookupByLibrary.simpleMessage("كلمه المرور الجديده"),
     "no_account": MessageLookupByLibrary.simpleMessage(
       "ليس لديك حساب بالفعل ؟ ",
     ),
+    "page_new_pass": MessageLookupByLibrary.simpleMessage(
+      "تعين كلمه مرور جديده",
+    ),
     "password": MessageLookupByLibrary.simpleMessage("كلمة المرور"),
     "phone_number": MessageLookupByLibrary.simpleMessage("رقم الجوال"),
+    "reciev_code": MessageLookupByLibrary.simpleMessage(
+      "لم تستلم الرمز؟ارسله بعد",
+    ),
+    "regster_num": MessageLookupByLibrary.simpleMessage(
+      "يرجي إدخال رقم الجوال المسجل لدينا",
+    ),
+    "req_password": MessageLookupByLibrary.simpleMessage("كلمة المرور مطلوبة"),
     "required": MessageLookupByLibrary.simpleMessage(" مطلوب"),
+    "resend": MessageLookupByLibrary.simpleMessage("اعد الارسال "),
     "reset_password": MessageLookupByLibrary.simpleMessage("اعاده تعيين "),
+    "send": MessageLookupByLibrary.simpleMessage("ارسال"),
+    "sent_code": MessageLookupByLibrary.simpleMessage(
+      " تم إرسال رمز التحقق لجوال رقم ",
+    ),
     "skip": MessageLookupByLibrary.simpleMessage("تخطي الان"),
     "subLogin": MessageLookupByLibrary.simpleMessage(
       "يرجي ادخال رقم الجوال المسجل لدينا وكلمه المرور",
@@ -53,5 +81,17 @@ class MessageLookup extends MessageLookupByLibrary {
       "يرجي ادخال البيانات الاتيه ",
     ),
     "title": MessageLookupByLibrary.simpleMessage("انشاء حساب جديد"),
+    "valaidat_num1": MessageLookupByLibrary.simpleMessage(
+      "رقم الهاتف يجب أن يتكون من 10 أرقام",
+    ),
+    "valaidat_num2": MessageLookupByLibrary.simpleMessage(
+      "الرقم الثالث لا يمكن أن يكون ",
+    ),
+    "validat_pass": MessageLookupByLibrary.simpleMessage(
+      " كلمتا المرور غير متطابقتين",
+    ),
+    "verfiy_code": MessageLookupByLibrary.simpleMessage("تحقق من الرمز"),
+    "verfiy_number": MessageLookupByLibrary.simpleMessage("التحقق من الجوال"),
+    "verfy": MessageLookupByLibrary.simpleMessage("\'رمز التحق"),
   };
 }

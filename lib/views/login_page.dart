@@ -1,19 +1,15 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logo_app_traning/Cubit/translate/translate_cubit.dart';
 import 'package:logo_app_traning/generated/l10n.dart';
 import 'package:logo_app_traning/helper/api_servic.dart';
 import 'package:logo_app_traning/helper/custom_button.dart';
 import 'package:logo_app_traning/helper/custom_snack_bar.dart';
 import 'package:logo_app_traning/helper/custom_text_field.dart';
-import 'package:logo_app_traning/main.dart';
-
+import 'package:logo_app_traning/views/home_view.dart';
 import 'package:logo_app_traning/views/regester_page.dart';
 import 'dart:convert';
-
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
 class LoginPage extends StatefulWidget {
@@ -28,41 +24,12 @@ class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
 
   final TextEditingController phoneController = TextEditingController(
-    text: '050',
+    text: '05',
   );
   final TextEditingController passwordController = TextEditingController();
 
   bool isLoading = false;
   bool isArabic = true;
-  // Future<bool> login() async {
-  //   if (!_formKey.currentState!.validate()) return false;
-
-  //   setState(() => isLoading = true);
-
-  //   try {
-  //     final response = await ApiService().loginUser(
-  //       phoneController.text.trim(),
-  //       passwordController.text.trim(),
-  //     );
-
-  //     if (response.statusCode == 200) {
-  //       final data = jsonDecode(response.body);
-  //       log(data.toString());
-  //       return true;
-
-  //     } else {
-  //       showSnackBar(context, 'فشل تسجيل الدخول: ${response.body}');
-  //       print(response.body);
-  //       return false;
-  //     }
-  //   } catch (e) {
-  //     showSnackBar(context, 'حدث خطأ أثناء تسجيل الدخول');
-  //     print(e);
-  //     return false;
-  //   } finally {
-  //     setState(() => isLoading = false);
-  //   }
-  // }
 
   Future<bool> login() async {
     if (!_formKey.currentState!.validate()) return false;
@@ -77,13 +44,11 @@ class _LoginPageState extends State<LoginPage> {
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        // debugPrint('📦 استجابة السيرفر:\n${jsonEncode(data)}');
 
-        // قراءة بيانات المستخدم
         final user = data['data']['user'];
 
         final isVerified = user['phoneNumberConfirmed'] == true;
-        // <-- تأكد الاسم صحيح حسب الاستجابة
+
         debugPrint('🔍 phoneNumberConfirmed: ${user['phoneNumberConfirmed']}');
 
         log('✅ تسجيل الدخول ناجح. isVerified = $isVerified');
@@ -95,7 +60,7 @@ class _LoginPageState extends State<LoginPage> {
             'verfiyPage',
             arguments: phoneController.text.trim(),
           );
-          showSnackBar(context, 'تم تسجيل الدخول بنجاح', Colors.green);
+          showSnackBar(context, 'تم تسجيل الدخول بنجاح', Colors.greenAccent);
         } else {
           // المستخدم مفعل → صفحة الهوم
           Navigator.pushReplacementNamed(context, 'homeView');
@@ -159,13 +124,18 @@ class _LoginPageState extends State<LoginPage> {
                     controller: phoneController,
                     keyboardType: TextInputType.phone,
                     onChanged: (data) {
-                      if (!data.startsWith('050')) {
-                        phoneController.text = '050';
-                        phoneController.selection = TextSelection.fromPosition(
-                          TextPosition(offset: phoneController.text.length),
+                      if (!data.startsWith('05')) {
+                        phoneController.text = '05';
+                      }
+                     
+                      phoneController.selection = TextSelection.fromPosition(
+                        TextPosition(offset: phoneController.text.length),
+                      );
+                      if (phoneController.text.length > 10) {
+                        phoneController.text = phoneController.text.substring(
+                          0,
+                          10,
                         );
-                      } else if (data.length > 10) {
-                        phoneController.text = data.substring(0, 10);
                         phoneController.selection = TextSelection.fromPosition(
                           TextPosition(offset: phoneController.text.length),
                         );
@@ -175,13 +145,20 @@ class _LoginPageState extends State<LoginPage> {
                     maxLength: 10,
                     inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                     validator: (value) {
-                      if (value!.length < 10) {
-                        return 'رقم الهاتف يجب أن يتكون من 10 أرقام';
+                  
+                      if (value!.length >= 3) {
+                        String thirdDigit = value[2];
+                        log(thirdDigit);
+                        if (thirdDigit == '0' || thirdDigit == '2') {
+                          return S.of(context).valaidat_num2 +thirdDigit;
+                        }
+                      }
+                      if (value.length < 10) {
+                        return S.of(context).valaidat_num1;
                       }
                       return null;
                     },
                   ),
-
                   const SizedBox(height: 20),
                   CustomFormTextField(
                     controller: passwordController,
@@ -190,7 +167,7 @@ class _LoginPageState extends State<LoginPage> {
                     usePassword: true,
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
-                        return 'كلمة المرور مطلوبة';
+                        return S.of(context).req_password;
                       }
                       return null;
                     },
@@ -248,9 +225,15 @@ class _LoginPageState extends State<LoginPage> {
                     ],
                   ),
                   const SizedBox(height: 25),
-                  Text(
-                    S.of(context).skip,
-                    style: TextStyle(fontSize: 16, color: Colors.black),
+
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pushNamed(context, 'resetpassword', arguments:  phoneController.text);
+                    },
+                    child: Text(
+                      S.of(context).skip,
+                      style: TextStyle(fontSize: 16, color: Colors.black),
+                    ),
                   ),
                   SizedBox(height: 45),
                   Row(

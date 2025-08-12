@@ -198,6 +198,176 @@ class S {
   String get field {
     return Intl.message('Field ', name: 'field', desc: '', args: []);
   }
+
+  /// `Mobile verification`
+  String get verfiy_number {
+    return Intl.message(
+      'Mobile verification',
+      name: 'verfiy_number',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Verification code sent to  `
+  String get sent_code {
+    return Intl.message(
+      'Verification code sent to  ',
+      name: 'sent_code',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `change`
+  String get change {
+    return Intl.message('change', name: 'change', desc: '', args: []);
+  }
+
+  /// `Didn't receive code? Send it `
+  String get reciev_code {
+    return Intl.message(
+      'Didn\'t receive code? Send it ',
+      name: 'reciev_code',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Resend`
+  String get resend {
+    return Intl.message('Resend', name: 'resend', desc: '', args: []);
+  }
+
+  /// `Type the letters shown above`
+  String get capatcha_label {
+    return Intl.message(
+      'Type the letters shown above',
+      name: 'capatcha_label',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Verify code`
+  String get verfiy_code {
+    return Intl.message('Verify code', name: 'verfiy_code', desc: '', args: []);
+  }
+
+  /// `Forgot password`
+  String get forget_pass {
+    return Intl.message(
+      'Forgot password',
+      name: 'forget_pass',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please enter registered mobile number`
+  String get regster_num {
+    return Intl.message(
+      'Please enter registered mobile number',
+      name: 'regster_num',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Phone number must be 10 digits`
+  String get valaidat_num1 {
+    return Intl.message(
+      'Phone number must be 10 digits',
+      name: 'valaidat_num1',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The third number cannot be`
+  String get valaidat_num2 {
+    return Intl.message(
+      'The third number cannot be',
+      name: 'valaidat_num2',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Send`
+  String get send {
+    return Intl.message('Send', name: 'send', desc: '', args: []);
+  }
+
+  /// `The passwords do not match`
+  String get validat_pass {
+    return Intl.message(
+      'The passwords do not match',
+      name: 'validat_pass',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Nwe password`
+  String get new_pass {
+    return Intl.message('Nwe password', name: 'new_pass', desc: '', args: []);
+  }
+
+  /// ` Confirm New Password`
+  String get conf_new_pass {
+    return Intl.message(
+      ' Confirm New Password',
+      name: 'conf_new_pass',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Verify code`
+  String get verfy {
+    return Intl.message('Verify code', name: 'verfy', desc: '', args: []);
+  }
+
+  /// `Please enter email`
+  String get enter_email {
+    return Intl.message(
+      'Please enter email',
+      name: 'enter_email',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `enter correct email`
+  String get correct_email {
+    return Intl.message(
+      'enter correct email',
+      name: 'correct_email',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `required password`
+  String get req_password {
+    return Intl.message(
+      'required password',
+      name: 'req_password',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Set a new password`
+  String get page_new_pass {
+    return Intl.message(
+      'Set a new password',
+      name: 'page_new_pass',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {
