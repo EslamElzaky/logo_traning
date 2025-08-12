@@ -228,7 +228,7 @@ class _LoginPageState extends State<LoginPage> {
 
                   GestureDetector(
                     onTap: () {
-                      Navigator.pushNamed(context, 'resetpassword', arguments:  phoneController.text);
+                      Navigator.pushNamed(context,'homeView' );
                     },
                     child: Text(
                       S.of(context).skip,

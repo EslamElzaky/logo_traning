@@ -29,30 +29,30 @@ class MyApp extends StatelessWidget {
       child: BlocBuilder<TranslateCubit, TranslateState>(
         builder: (context, state) {
           return MaterialApp(
-            theme: ThemeData(
-              brightness: Brightness.dark,
-              fontFamily: 'Poppins',
-            ),
-            debugShowCheckedModeBanner: false,
-            locale: state.appLocale,
-            localizationsDelegates: [
-              S.delegate,
-              GlobalMaterialLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate,
-              GlobalCupertinoLocalizations.delegate,
-            ],
-            supportedLocales: S.delegate.supportedLocales,
 
-            routes: {
-              'regesterpage': (context) => RegesterPage(),
-              'loginpage': (context) => LoginPage(),
-              'homeView': (context) => HomeView(),
-              'verfiyPage': (context) => VerfiyPage(),
-              'forgetPassword': (context) => ForgetPassword(),
-              'resetpassword': (context) => ResetPassword(),
-            },
-            initialRoute:'loginpage' ,
-          );
+              theme: ThemeData(brightness: Brightness.dark, fontFamily: 'Poppins'),
+              debugShowCheckedModeBanner: false,
+              locale:state.appLocale ,
+              localizationsDelegates: [
+                S.delegate,
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
+              ],
+              supportedLocales: S.delegate.supportedLocales,
+            
+              routes: {
+                'regesterpage': (context) => RegesterPage(),
+                'loginpage': (context) => LoginPage(),
+                'homeView': (context) => HomeView(),
+                'verfiyPage': (context) => VerfiyPage(),
+                'forgetPassword': (context) => ForgetPassword(),
+                'resetpassword': (context) => ResetPassword(),
+              },
+              initialRoute: LoginPage.id,
+            );
+
+           
         },
       ),
     );
