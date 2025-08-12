@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_countdown_timer/flutter_countdown_timer.dart';
 import 'package:logo_app_traning/Cubit/otp_cubit.dart';
 import 'package:logo_app_traning/Cubit/otp_state.dart';
+import 'package:logo_app_traning/generated/l10n.dart';
 import 'package:logo_app_traning/helper/api_servic.dart';
 import 'package:logo_app_traning/helper/custom_button.dart';
 import 'package:logo_app_traning/helper/custom_text_field.dart';
@@ -67,7 +68,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                 ),
                 SizedBox(height: 40),
                 Text(
-                  'تعين كلمه مرور جديده',
+                  S.of(context).page_new_pass,
                   style: TextStyle(
                     fontSize: 24,
                     fontFamily: 'Alexandria',
@@ -78,23 +79,23 @@ class _ResetPasswordState extends State<ResetPassword> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "تم إرسال رمز التحقق لجوال رقم ",
+                      S.of(context).sent_code,
                       style: TextStyle(color: Colors.black),
                     ),
                     Text(phoneNumber, style: TextStyle(color: Colors.black)),
                   ],
                 ),
                 SizedBox(height: 30),
-                CustomFormTextField(labelText: 'رمز التحقق'),
+                CustomFormTextField(labelText: S.of(context).verfy),
                 SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text(
-                      'لم تستلم الرمز؟ارسله بعد',
+                    Text(
+                      S.of(context).reciev_code,
                       style: TextStyle(color: Color(0xFF24A19B)),
                     ),
-            
+
                     const SizedBox(width: 5),
                     BlocBuilder<OtpCubit, OtpState>(
                       builder: (context, state) {
@@ -111,7 +112,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                                     ApiService().regenerateOtp(phoneNumber);
                                   },
                                   child: Text(
-                                    "أعد الإرسال الآن",
+                                    S.of(context).resend,
                                     style: TextStyle(
                                       color: Colors.teal,
                                       fontWeight: FontWeight.bold,
@@ -120,7 +121,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                                   ),
                                 );
                               }
-            
+
                               return Text(
                                 "${time.sec?.toString().padLeft(2, '0') ?? '00'}",
                                 style: const TextStyle(
@@ -144,7 +145,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                   onChanged: (data) {
                     password = data;
                   },
-                  labelText: 'كلمه المرور الجديده',
+                  labelText: S.of(context).new_pass,
                   obscureText: true,
                   usePassword: true,
                 ),
@@ -155,7 +156,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                     confirmPassword = data;
                     if (confirmPassword != password) {
                       setState(() {
-                        passwordError = 'كلمتا المرور غير متطابقتين';
+                        passwordError = S.of(context).validat_pass;
                       });
                     } else {
                       setState(() {
@@ -163,7 +164,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                       });
                     }
                   },
-                  labelText: 'تاكيد كلمه المرور الجديده',
+                  labelText: S.of(context).conf_new_pass,
                   obscureText: true,
                   usePassword: true,
                   errorText: passwordError,
@@ -171,7 +172,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                 SizedBox(height: 40),
                 CustomButton(
                   size: 200,
-                  text: 'تسجيل الدخول',
+                  text: S.of(context).login,
                   onTap: () {
                     if (formKey.currentState!.validate()) {}
                   },

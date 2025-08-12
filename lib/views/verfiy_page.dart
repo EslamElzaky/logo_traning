@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logo_app_traning/Cubit/otp_cubit.dart';
 import 'package:logo_app_traning/Cubit/otp_state.dart';
+import 'package:logo_app_traning/generated/l10n.dart';
 import 'package:logo_app_traning/helper/custom_button.dart';
 import 'package:logo_app_traning/helper/custom_snack_bar.dart';
 import 'package:logo_app_traning/helper/custom_text_field.dart';
@@ -21,8 +22,6 @@ class VerfiyPage extends StatefulWidget {
 }
 
 class _VerfiyPageState extends State<VerfiyPage> {
-  
-
   static TextEditingController pinController = TextEditingController();
   final TextEditingController captchaInputController = TextEditingController();
 
@@ -43,6 +42,7 @@ class _VerfiyPageState extends State<VerfiyPage> {
     pinController.dispose();
     captchaInputController.dispose();
     super.dispose();
+      if (!mounted) return;
   }
 
   void _onVerifyPressed() async {
@@ -55,7 +55,7 @@ class _VerfiyPageState extends State<VerfiyPage> {
       return;
     }
     if (otpCode.length != 6) {
-      showSnackBar(context, 'من فضلك أدخل رمز التحقق الكامل',Colors.yellow);
+      showSnackBar(context, 'من فضلك أدخل رمز التحقق الكامل', Colors.yellow);
       return;
     }
     final phoneNumber = ModalRoute.of(context)!.settings.arguments as String;
@@ -68,15 +68,24 @@ class _VerfiyPageState extends State<VerfiyPage> {
           showSnackBar(context, 'تم التحقق بنجاح', Colors.green);
           Navigator.pushReplacementNamed(context, 'homeView'); // مثال
         } else {
-          showSnackBar(context, ' فشل التحقق: ${data["message"] ?? "حدث خطأ"}', Colors.red);
+          showSnackBar(
+            context,
+            ' فشل التحقق: ${data["message"] ?? "حدث خطأ"}',
+            Colors.red,
+          );
         }
       } else {
-        showSnackBar(context, ' فشل الاتصال: ${response.statusCode}',Colors.orange);
+        showSnackBar(
+          context,
+          ' فشل الاتصال: ${response.statusCode}',
+          Colors.orange,
+        );
       }
     } catch (e) {
-      showSnackBar(context, ' خطأ أثناء التحقق: $e',Colors.deepOrangeAccent);
+      showSnackBar(context, ' خطأ أثناء التحقق: $e', Colors.deepOrangeAccent);
     }
   }
+
   @override
   Widget build(BuildContext context) {
     final String phoneNumber =
@@ -99,8 +108,8 @@ class _VerfiyPageState extends State<VerfiyPage> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                const Text(
-                  "التحقق من الجوال",
+                Text(
+                  S.of(context).verfiy_number,
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -112,14 +121,14 @@ class _VerfiyPageState extends State<VerfiyPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "تم إرسال رمز التحقق لجوال رقم ",
+                     S.of(context).sent_code,
                       style: TextStyle(color: Colors.black),
                     ),
                     Text(phoneNumber, style: TextStyle(color: Colors.black)),
-                    Text("  تغيير", style: TextStyle(color: Colors.blue)),
+                    Text( S.of(context).change, style: TextStyle(color: Colors.blue)),
                   ],
                 ),
-                const SizedBox(height: 16),            
+                const SizedBox(height: 16),
                 Directionality(
                   textDirection: TextDirection.ltr,
                   child: PinCodeTextField(
@@ -151,11 +160,11 @@ class _VerfiyPageState extends State<VerfiyPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text(
-                      'لم تستلم الرمز؟ارسله بعد',
+                     Text(
+                      S.of(context).reciev_code,
                       style: TextStyle(color: Color(0xFF24A19B)),
                     ),
-                   
+
                     const SizedBox(width: 5),
                     BlocBuilder<OtpCubit, OtpState>(
                       builder: (context, state) {
@@ -171,17 +180,15 @@ class _VerfiyPageState extends State<VerfiyPage> {
                             },
                             widgetBuilder: (_, time) {
                               if (time == null) {
-                           
                                 return InkWell(
                                   onTap: () {
                                     log('Resend OTP tapped');
                                     OtpCubit.get(context).resartTimer();
-                                    captchaController
-                                        .regenerate(); 
+                                    captchaController.regenerate();
                                     ApiService().regenerateOtp(phoneNumber);
                                   },
                                   child: Text(
-                                    "أعد الإرسال الآن",
+                                   S.of(context).resend,
                                     style: TextStyle(
                                       color: Colors.teal,
                                       fontWeight: FontWeight.bold,
@@ -191,7 +198,6 @@ class _VerfiyPageState extends State<VerfiyPage> {
                                 );
                               }
 
-                              
                               return Text(
                                 "${time.sec?.toString().padLeft(2, '0') ?? '00'}",
                                 style: const TextStyle(
@@ -203,7 +209,6 @@ class _VerfiyPageState extends State<VerfiyPage> {
                             },
                           );
                         } else {
-                         
                           return SizedBox.shrink();
                         }
                       },
@@ -246,14 +251,14 @@ class _VerfiyPageState extends State<VerfiyPage> {
                 const SizedBox(height: 40),
                 CustomFormTextField(
                   controller: captchaInputController,
-                  labelText: 'اكتب الحروف الظاهرة بالأعلى',
+                  labelText: S.of(context).capatcha_label,
                 ),
 
                 const SizedBox(height: 20),
 
                 CustomButton(
                   size: 150,
-                  text: 'تحقق من الرمز',
+                  text: S.of(context).verfiy_code,
                   onTap: () {
                     _onVerifyPressed();
                   },

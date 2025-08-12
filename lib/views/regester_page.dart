@@ -19,7 +19,7 @@ class RegesterPage extends StatefulWidget {
 
 class _RegesterPageState extends State<RegesterPage> {
   final TextEditingController phoneController = TextEditingController(
-    text: '050',
+    text: '05',
   );
   final TextEditingController emailController = TextEditingController();
   final TextEditingController firstNameController = TextEditingController();
@@ -156,40 +156,44 @@ class _RegesterPageState extends State<RegesterPage> {
                   ],
                 ),
                 SizedBox(height: 20),
-                CustomFormTextField(
-                  controller: phoneController,
-                  keyboardType: TextInputType.phone,
-                  onChanged: (data) {
-                    if (!data.startsWith('050')) {
-                      phoneController.text = '050';
+               CustomFormTextField(
+                    controller: phoneController,
+                    keyboardType: TextInputType.phone,
+                    onChanged: (data) {
+                      if (!data.startsWith('05')) {
+                        phoneController.text = '05';
+                      }
+                     
                       phoneController.selection = TextSelection.fromPosition(
                         TextPosition(offset: phoneController.text.length),
                       );
-                    } else if (data.length > 10) {
-                      phoneController.text = data.substring(0, 10);
-                      phoneController.selection = TextSelection.fromPosition(
-                        TextPosition(offset: phoneController.text.length),
-                      );
-                    } else {
-                      userName = data;
-                    }
-                  },
-                  labelText: S.of(context).phone_number,
-                  maxLength: 10,
-                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                  validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return 'رقم الهاتف مطلوب';
-                    }
-                    if (!value.startsWith('050')) {
-                      return 'رقم الهاتف يجب أن يبدأ بـ 050';
-                    }
-                    if (value.length != 10) {
-                      return 'رقم الهاتف يجب أن يتكون من 10 أرقام';
-                    }
-                    return null;
-                  },
-                ),
+                      if (phoneController.text.length > 10) {
+                        phoneController.text = phoneController.text.substring(
+                          0,
+                          10,
+                        );
+                        phoneController.selection = TextSelection.fromPosition(
+                          TextPosition(offset: phoneController.text.length),
+                        );
+                      }
+                    },
+                    labelText: S.of(context).phone_number,
+                    maxLength: 10,
+                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                    validator: (value) {
+                  
+                      if (value!.length >= 3) {
+                        String thirdDigit = value[2];
+                        if (thirdDigit == '0' || thirdDigit == '2') {
+                          return S.of(context).valaidat_num2 +thirdDigit;
+                        }
+                      }
+                      if (value.length < 10) {
+                        return S.of(context).valaidat_num1;
+                      }
+                      return null;
+                    },
+                  ),
 
                 SizedBox(height: 20),
                 CustomFormTextField(
@@ -200,13 +204,13 @@ class _RegesterPageState extends State<RegesterPage> {
                   labelText: S.of(context).email,
                   validator: (data) {
                     if (data == null || data.trim().isEmpty) {
-                      return 'يجب ادخال الايميل';
+                      return S.of(context).enter_email;
                     }
                     final emailRegex = RegExp(
                       r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
                     );
                     if (!emailRegex.hasMatch(data.trim())) {
-                      return 'من فضلك ادخل الايميل بشكل صحيح';
+                      return S.of(context).correct_email;
                     }
                     return null;
                   },
@@ -228,7 +232,7 @@ class _RegesterPageState extends State<RegesterPage> {
                     confirmPassword = data;
                     if (confirmPassword != password) {
                       setState(() {
-                        passwordError = 'كلمتا المرور غير متطابقتين';
+                        passwordError = S.of(context).validat_pass;
                       });
                     } else {
                       setState(() {

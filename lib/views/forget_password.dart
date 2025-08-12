@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:logo_app_traning/generated/l10n.dart';
 import 'package:logo_app_traning/helper/custom_button.dart';
 import 'package:logo_app_traning/helper/custom_text_field.dart';
 import 'package:logo_app_traning/helper/api_servic.dart';
@@ -25,9 +26,10 @@ class _ForgetPasswordState extends State<ForgetPassword> {
       );
 
       if (response.statusCode == 200) {
+         await ApiService().regenerateOtp(phoneController.text.trim());
         Navigator.pushNamed(
           context,
-          'verfiyPage',
+          'resetpassword',
           arguments: phoneController.text.trim(),
         );
       } else {
@@ -74,7 +76,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                 ),
                 SizedBox(height: 100),
                 Text(
-                  'نسيت كلمه المرور',
+                  S.of(context).forget_pass,
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.normal,
@@ -84,7 +86,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                 ),
                 SizedBox(height: 10),
                 Text(
-                  'يرجي إدخال رقم الجوال المسجل لدينا',
+                  S.of(context).regster_num,
                   style: TextStyle(
                     fontSize: 14,
 
@@ -93,45 +95,51 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                   ),
                 ),
                 SizedBox(height: 60),
-                CustomFormTextField(
-                  hintText: 'يرجي إدخال رقم الجوال المسجل لدينا',
-                  controller: phoneController,
-                  keyboardType: TextInputType.phone,
-                  onChanged: (data) {
-                    if (!data.startsWith('05')) {
-                      phoneController.text = '05';
+             CustomFormTextField(
+                    controller: phoneController,
+                    keyboardType: TextInputType.phone,
+                    onChanged: (data) {
+                      if (!data.startsWith('05')) {
+                        phoneController.text = '05';
+                      }
+                     
                       phoneController.selection = TextSelection.fromPosition(
                         TextPosition(offset: phoneController.text.length),
                       );
-                    } else if (data.length > 10) {
-                      phoneController.text = data.substring(0, 10);
-                      phoneController.selection = TextSelection.fromPosition(
-                        TextPosition(offset: phoneController.text.length),
-                      );
-                    }
-                  },
-                  labelText: 'رقم الجوال',
-                  maxLength: 10,
-                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                  validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return 'رقم الهاتف مطلوب';
-                    }
-                    if (!value.startsWith('050')) {
-                      return 'رقم الهاتف يجب أن يبدأ بـ 050';
-                    }
-                    if (value.length != 10) {
-                      return 'رقم الهاتف يجب أن يتكون من 10 أرقام';
-                    }
-                    return null;
-                  },
-                ),
+                      if (phoneController.text.length > 10) {
+                        phoneController.text = phoneController.text.substring(
+                          0,
+                          10,
+                        );
+                        phoneController.selection = TextSelection.fromPosition(
+                          TextPosition(offset: phoneController.text.length),
+                        );
+                      }
+                    },
+                    labelText: S.of(context).phone_number,
+                    maxLength: 10,
+                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                    validator: (value) {
+                  
+                      if (value!.length >= 3) {
+                        String thirdDigit = value[2];
+                        if (thirdDigit == '0' || thirdDigit == '2') {
+                          return S.of(context).valaidat_num2 +thirdDigit;
+                        }
+                      }
+                      if (value.length < 10) {
+                        return S.of(context).valaidat_num1;
+                      }
+                      return null;
+                    },
+                  ),
                 SizedBox(height: 30),
                 CustomButton(
                   size: 200,
-                  text: 'ارسال',
+                  text: S.of(context).send,
                   onTap: () {
                     _forgetPassword();
+                    
                   },
                 ),
               ],
