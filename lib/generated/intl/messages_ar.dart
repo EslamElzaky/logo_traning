@@ -80,6 +80,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "subtitle": MessageLookupByLibrary.simpleMessage(
       "يرجي ادخال البيانات الاتيه ",
     ),
+    "titel_home": MessageLookupByLibrary.simpleMessage("مرحبا عميلنا العزيز"),
     "title": MessageLookupByLibrary.simpleMessage("انشاء حساب جديد"),
     "valaidat_num1": MessageLookupByLibrary.simpleMessage(
       "رقم الهاتف يجب أن يتكون من 10 أرقام",

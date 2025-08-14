@@ -37,5 +37,6 @@
     "enter_email": "Please enter email",
     "correct_email": "enter correct email",
     "req_password": "required password",
-    "page_new_pass": "Set a new password"
+    "page_new_pass": "Set a new password",
+    "titel_home": "Hello dear customer"
 }

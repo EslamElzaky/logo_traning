@@ -368,6 +368,16 @@ class S {
       args: [],
     );
   }
+
+  /// `Hello dear customer`
+  String get titel_home {
+    return Intl.message(
+      'Hello dear customer',
+      name: 'titel_home',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

@@ -74,6 +74,7 @@ class MessageLookup extends MessageLookupByLibrary {
       " enter phone number and password",
     ),
     "subtitle": MessageLookupByLibrary.simpleMessage("enter Youer information"),
+    "titel_home": MessageLookupByLibrary.simpleMessage("Hello dear customer"),
     "title": MessageLookupByLibrary.simpleMessage("Create a New Account"),
     "valaidat_num1": MessageLookupByLibrary.simpleMessage(
       "Phone number must be 10 digits",

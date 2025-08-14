@@ -49,7 +49,7 @@ class MyApp extends StatelessWidget {
                 'forgetPassword': (context) => ForgetPassword(),
                 'resetpassword': (context) => ResetPassword(),
               },
-              initialRoute: LoginPage.id,
+              initialRoute: 'homeView',
             );
 
            

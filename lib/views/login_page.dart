@@ -41,7 +41,6 @@ class _LoginPageState extends State<LoginPage> {
       final response = await ApiService().loginUser(
         phoneController.text.trim(),
         passwordController.text.trim(),
-        
       );
       final data = jsonDecode(response.body);
       if (response.statusCode == 200) {
@@ -60,7 +59,11 @@ class _LoginPageState extends State<LoginPage> {
             'verfiyPage',
             arguments: phoneController.text.trim(),
           );
-          showSnackBar(context, data["message"]??'تم تسجيل الدخول بنجاح', Colors.greenAccent);
+          showSnackBar(
+            context,
+            data["message"] ?? 'تم تسجيل الدخول بنجاح',
+            Colors.greenAccent,
+          );
         } else {
           // المستخدم مفعل → صفحة الهوم
           Navigator.pushReplacementNamed(context, 'homeView');
@@ -68,7 +71,11 @@ class _LoginPageState extends State<LoginPage> {
 
         return true;
       } else {
-        showSnackBar(context, data["message"]??'فشل تسجيل  الدخول', Colors.red);
+        showSnackBar(
+          context,
+          data["message"] ?? 'فشل تسجيل  الدخول',
+          Colors.red,
+        );
         return false;
       }
     } catch (e) {
@@ -196,10 +203,8 @@ class _LoginPageState extends State<LoginPage> {
                   CustomButton(
                     size: 250,
                     text: S.of(context).login,
-                    onTap: () async {
-                      await login();
-
-                      setState(() => isLoading = false);
+                    onTap: () {
+                      login();
                     },
                   ),
                   const SizedBox(height: 20),

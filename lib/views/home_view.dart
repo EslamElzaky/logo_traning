@@ -1,5 +1,8 @@
+import 'dart:developer';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:logo_app_traning/generated/l10n.dart';
 import 'package:logo_app_traning/helper/custom_drawr.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -13,12 +16,7 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
-  final urlImags = [
-    // "assets/images/download.png",
-    // "assets/images/elephant.jpeg",
-    // "assets/images/rabet.jpeg",
-  ];
-
+  int sliderIndex = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,9 +24,22 @@ class _HomeViewState extends State<HomeView> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         // leading: Icon(Icons.notifications_none),
-        title: const Text('Home View', style: TextStyle(color: Colors.black)),
+        title: Text(
+          S.of(context).titel_home,
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ),
+        ),
         centerTitle: true,
         backgroundColor: Colors.grey,
+        actions: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Icon(Icons.notifications, size: 35),
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -37,27 +48,14 @@ class _HomeViewState extends State<HomeView> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               CarouselSlider(
-                items: [
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.grey[500],
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    child: Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.image, size: 60, color: Colors.grey[700]),
-                          Text(
-                            'صوره مصصممه خصيصا للعروض',
-                            style: TextStyle(color: Colors.grey[700]),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
+                items: [_sliderItem(), _sliderItem(), _sliderItem()],
                 options: CarouselOptions(
+                  onPageChanged: (index, reason) {
+                    setState(() {
+                      sliderIndex = index;
+                    });
+                    log('$sliderIndex');
+                  },
                   height: 190,
                   enlargeFactor: 0.5,
                   viewportFraction: 1,
@@ -67,7 +65,19 @@ class _HomeViewState extends State<HomeView> {
                 ),
               ),
               SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
 
+                children: List.generate(3, (index) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 2),
+                    child: index == sliderIndex
+                        ? circleIcon(Colors.grey)
+                        : circleIcon(),
+                  );
+                }),
+              ),
+              SizedBox(height: 10),
               Text(
                 "خدماتنا المميزة",
                 style: TextStyle(
@@ -155,11 +165,36 @@ class _HomeViewState extends State<HomeView> {
     );
   }
 
-  Widget circleIcon(Color color) {
+  Container _sliderItem() {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.grey[500],
+        borderRadius: BorderRadius.circular(15),
+      ),
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.image, size: 60, color: Colors.grey[700]),
+            Text(
+              'صوره مصصممه خصيصا للعروض',
+              style: TextStyle(color: Colors.grey[700]),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget circleIcon([Color? color]) {
     return Container(
       height: 18,
       width: 18,
-      decoration: BoxDecoration(shape: BoxShape.circle, color: color),
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey),
+        shape: BoxShape.circle,
+        color: color,
+      ),
     );
   }
 

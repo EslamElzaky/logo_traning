@@ -119,5 +119,22 @@ class ApiService {
     return response;
   }
 
-  // Future<http.Response> resetPassword(){};
+  Future<http.Response> resetPssword(
+    String code,
+    String password,
+    String confirmPasswod,
+  ) async {
+    final url = Uri.parse('$baseUrl/ar/Account/ResetPassword');
+    final response = await http.post(
+      url,
+      headers: headers,
+      body: jsonEncode({
+        'code': code,
+        'password': password,
+        'confirmPassword': confirmPasswod,
+      }),
+    );
+    log('Forget Password response: ${response.body}');
+    return response;
+  }
 }
