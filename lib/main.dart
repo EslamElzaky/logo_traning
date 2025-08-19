@@ -6,6 +6,7 @@ import 'package:logo_app_traning/generated/l10n.dart';
 import 'package:logo_app_traning/views/forget_password.dart';
 import 'package:logo_app_traning/views/home_view.dart';
 import 'package:logo_app_traning/views/login_page.dart';
+import 'package:logo_app_traning/views/page_service_houre.dart';
 import 'package:logo_app_traning/views/regester_page.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:logo_app_traning/views/reset_password.dart';
@@ -29,30 +30,31 @@ class MyApp extends StatelessWidget {
       child: BlocBuilder<TranslateCubit, TranslateState>(
         builder: (context, state) {
           return MaterialApp(
+            theme: ThemeData(
+              brightness: Brightness.dark,
+              fontFamily: 'Poppins',
+            ),
+            debugShowCheckedModeBanner: false,
+            locale: state.appLocale,
+            localizationsDelegates: [
+              S.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: S.delegate.supportedLocales,
 
-              theme: ThemeData(brightness: Brightness.dark, fontFamily: 'Poppins'),
-              debugShowCheckedModeBanner: false,
-              locale:state.appLocale ,
-              localizationsDelegates: [
-                S.delegate,
-                GlobalMaterialLocalizations.delegate,
-                GlobalWidgetsLocalizations.delegate,
-                GlobalCupertinoLocalizations.delegate,
-              ],
-              supportedLocales: S.delegate.supportedLocales,
-            
-              routes: {
-                'regesterpage': (context) => RegesterPage(),
-                'loginpage': (context) => LoginPage(),
-                'homeView': (context) => HomeView(),
-                'verfiyPage': (context) => VerfiyPage(),
-                'forgetPassword': (context) => ForgetPassword(),
-                'resetpassword': (context) => ResetPassword(),
-              },
-              initialRoute: LoginPage.id,
-            );
-
-           
+            routes: {
+              'regesterpage': (context) => RegesterPage(),
+              'loginpage': (context) => LoginPage(),
+              'homeView': (context) => HomeView(),
+              'verfiyPage': (context) => VerfiyPage(),
+              'forgetPassword': (context) => ForgetPassword(),
+              'resetpassword': (context) => ResetPassword(),
+              'serviceHoure': (context) => ServiceHoure(),
+            },
+            initialRoute: LoginPage.id,
+          );
         },
       ),
     );
