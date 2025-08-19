@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:logo_app_traning/generated/l10n.dart';
 import 'package:logo_app_traning/helper/custom_drawr.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:logo_app_traning/helper/custom_navigation_bottom.dart';
+import 'package:logo_app_traning/helper/custom_view_item.dart';
 
 class HomeView extends StatefulWidget {
   HomeView({super.key});
@@ -23,7 +25,7 @@ class _HomeViewState extends State<HomeView> {
       drawer: CustomDrawer(),
       backgroundColor: Colors.white,
       appBar: AppBar(
-        // leading: Icon(Icons.notifications_none),
+        
         title: Text(
           S.of(context).titel_home,
           style: TextStyle(
@@ -93,6 +95,9 @@ class _HomeViewState extends State<HomeView> {
 
               SizedBox(height: 10),
               ViewItems(
+                onTap: () {
+                  Navigator.pushNamed(context, 'serviceHoure');
+                },
                 titel: 'خدمة بالساعه',
                 subtitel: 'خدمات منزليه بنظام الساعات ',
               ),
@@ -126,42 +131,7 @@ class _HomeViewState extends State<HomeView> {
           ),
         ),
       ),
-      bottomNavigationBar: Padding(
-        padding: EdgeInsets.only(top: 10),
-        child: BottomNavigationBar(
-          backgroundColor: Colors.grey[400],
-          selectedItemColor: Colors.white,
-          type: BottomNavigationBarType.fixed,
-          unselectedItemColor: Colors.white70,
-          items: [
-            BottomNavigationBarItem(
-              icon: circleIcon(Colors.blueGrey),
-              activeIcon: circleIcon(Colors.black),
-              label: "الرئيسية",
-            ),
-            BottomNavigationBarItem(
-              icon: circleIcon(Colors.blueGrey),
-              activeIcon: circleIcon(Colors.black),
-              label: "تعاقداتي",
-            ),
-            BottomNavigationBarItem(
-              icon: circleIcon(Colors.blueGrey),
-              activeIcon: circleIcon(Colors.black),
-              label: 'طلباتي',
-            ),
-            BottomNavigationBarItem(
-              icon: circleIcon(Colors.blueGrey),
-              activeIcon: circleIcon(Colors.black),
-              label: "العروض",
-            ),
-            BottomNavigationBarItem(
-              icon: circleIcon(Colors.blueGrey),
-              activeIcon: circleIcon(Colors.black),
-              label: "اتصل بنا",
-            ),
-          ],
-        ),
-      ),
+      bottomNavigationBar: BottomBar(),
     );
   }
 
@@ -202,6 +172,7 @@ class _HomeViewState extends State<HomeView> {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: FloatingActionButton(
+        heroTag: null,
         onPressed: onPressed,
         backgroundColor: Colors.grey[300],
         elevation: 1,
@@ -218,59 +189,4 @@ class _HomeViewState extends State<HomeView> {
       child: Image.asset(urlImage, fit: BoxFit.fill, width: double.infinity),
     ),
   );
-}
-
-class ViewItems extends StatelessWidget {
-  ViewItems({super.key, required this.titel, required this.subtitel});
-  final String titel;
-  final String subtitel;
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 100,
-      width: double.infinity,
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.black54, width: 2),
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Row(
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Container(
-              height: 60,
-              width: 60,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                // shape: BoxShape.rectangle,
-                color: Colors.grey[500],
-              ),
-            ),
-          ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                titel,
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black87,
-                ),
-              ),
-              Text(
-                subtitel,
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black87,
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
 }
