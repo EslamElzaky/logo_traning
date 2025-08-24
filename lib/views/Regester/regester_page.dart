@@ -1,15 +1,12 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:logo_app_traning/generated/l10n.dart';
-import 'package:logo_app_traning/helper/api_servic.dart';
 import 'package:logo_app_traning/helper/custom_button.dart';
-import 'package:logo_app_traning/helper/custom_snack_bar.dart';
 import 'package:logo_app_traning/helper/custom_text_field.dart';
-import 'package:logo_app_traning/model/regester_model.dart';
-import 'package:logo_app_traning/views/login_page.dart';
+import 'package:logo_app_traning/views/Login/login_page.dart';
+import 'package:logo_app_traning/views/Regester/regester_data.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
-import 'dart:convert';
-
 
 class RegesterPage extends StatefulWidget {
   const RegesterPage({super.key});
@@ -20,76 +17,15 @@ class RegesterPage extends StatefulWidget {
 }
 
 class _RegesterPageState extends State<RegesterPage> {
-  final TextEditingController phoneController = TextEditingController(
-    text: '05',
-  );
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController firstNameController = TextEditingController();
-  final TextEditingController middleNameController = TextEditingController();
-  final TextEditingController lastNameController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController =
-      TextEditingController();
-
-  String? email,
-      userName,
-      city,
-      password,
-      firstName,
-      midName,
-      lastName,
-      confirmPassword,
-      passwordError;
-  bool isLoading = false;
-
-  Future<bool> register() async {
-    if (formkey.currentState!.validate()) {
-      setState(() => isLoading = true);
-      SignUpUserPost user = SignUpUserPost(
-        firstName: firstNameController.text,
-        middleName: middleNameController.text,
-        lastName: lastNameController.text,
-        email: emailController.text,
-        password: passwordController.text,
-        confirmPassword: confirmPasswordController.text,
-        userName: phoneController.text.trim(),
-      );
-      if (passwordController.text != confirmPasswordController.text) {
-        showSnackBar(context, 'كلمة المرور وتأكيد كلمة المرور غير متطابقتين', Colors.yellow);
-        setState(() => isLoading = false);
-        return false;
-      }
-
-      final response = await ApiService().registerUser(user);
-      final data = jsonDecode(response.body);
-
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        showSnackBar(context, 'تم تسجيل الدخول بنجاح', Colors.green);
-        await ApiService().regenerateOtp(phoneController.text.trim());
-        Navigator.pushNamed(
-          context,
-          'verfiyPage',
-          arguments: phoneController.text.trim(),
-        );
-
-        return true;
-      } else {
-        showSnackBar(context, data["message"]??'فشل تسجيل الدخول', Colors.red);
-        return false;
-      }
-    }
-    return false;
-  }
-
-  GlobalKey<FormState> formkey = GlobalKey();
+  RegesterData regesterData = RegesterData();
   @override
   Widget build(BuildContext context) {
     return ModalProgressHUD(
-      inAsyncCall: isLoading,
+      inAsyncCall: regesterData.isLoading,
       child: Scaffold(
         backgroundColor: Colors.white,
         body: Form(
-          key: formkey,
+          key: regesterData.formKey,
           child: SingleChildScrollView(
             padding: EdgeInsets.symmetric(horizontal: 16, vertical: 50),
             child: Column(
@@ -121,9 +57,9 @@ class _RegesterPageState extends State<RegesterPage> {
                 ),
                 SizedBox(height: 20),
                 CustomFormTextField(
-                  controller: firstNameController,
+                  controller: regesterData.firstNameController,
                   onChanged: (data) {
-                    firstName = data;
+                    regesterData.firstName = data;
                   },
                   labelText: S.of(context).first_name,
                   inputFormatters: [
@@ -134,9 +70,9 @@ class _RegesterPageState extends State<RegesterPage> {
                 ),
                 SizedBox(height: 20),
                 CustomFormTextField(
-                  controller: middleNameController,
+                  controller: regesterData.middleNameController,
                   onChanged: (data) {
-                    midName = data;
+                    regesterData.midName = data;
                   },
                   labelText: S.of(context).middle_name,
                   inputFormatters: [
@@ -147,9 +83,9 @@ class _RegesterPageState extends State<RegesterPage> {
                 ),
                 SizedBox(height: 20),
                 CustomFormTextField(
-                  controller: lastNameController,
+                  controller: regesterData.lastNameController,
                   onChanged: (data) {
-                    lastName = data;
+                    regesterData.lastName = data;
                   },
                   labelText: S.of(context).last_name,
                   inputFormatters: [
@@ -159,50 +95,55 @@ class _RegesterPageState extends State<RegesterPage> {
                   ],
                 ),
                 SizedBox(height: 20),
-               CustomFormTextField(
-                    controller: phoneController,
-                    keyboardType: TextInputType.phone,
-                    onChanged: (data) {
-                      if (!data.startsWith('05')) {
-                        phoneController.text = '05';
-                      }
-                     
-                      phoneController.selection = TextSelection.fromPosition(
-                        TextPosition(offset: phoneController.text.length),
-                      );
-                      if (phoneController.text.length > 10) {
-                        phoneController.text = phoneController.text.substring(
-                          0,
-                          10,
+                CustomFormTextField(
+                  controller: regesterData.phoneController,
+                  keyboardType: TextInputType.phone,
+                  onChanged: (data) {
+                    if (!data.startsWith('05')) {
+                      regesterData.phoneController.text = '05';
+                    }
+
+                    regesterData.phoneController.selection =
+                        TextSelection.fromPosition(
+                          TextPosition(
+                            offset: regesterData.phoneController.text.length,
+                          ),
                         );
-                        phoneController.selection = TextSelection.fromPosition(
-                          TextPosition(offset: phoneController.text.length),
-                        );
+                    if (regesterData.phoneController.text.length > 10) {
+                      regesterData.phoneController.text = regesterData
+                          .phoneController
+                          .text
+                          .substring(0, 10);
+                      regesterData.phoneController.selection =
+                          TextSelection.fromPosition(
+                            TextPosition(
+                              offset: regesterData.phoneController.text.length,
+                            ),
+                          );
+                    }
+                  },
+                  labelText: S.of(context).phone_number,
+                  maxLength: 10,
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                  validator: (value) {
+                    if (value!.length >= 3) {
+                      String thirdDigit = value[2];
+                      if (thirdDigit == '0' || thirdDigit == '2') {
+                        return S.of(context).valaidat_num2 + thirdDigit;
                       }
-                    },
-                    labelText: S.of(context).phone_number,
-                    maxLength: 10,
-                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                    validator: (value) {
-                  
-                      if (value!.length >= 3) {
-                        String thirdDigit = value[2];
-                        if (thirdDigit == '0' || thirdDigit == '2') {
-                          return S.of(context).valaidat_num2 +thirdDigit;
-                        }
-                      }
-                      if (value.length < 10) {
-                        return S.of(context).valaidat_num1;
-                      }
-                      return null;
-                    },
-                  ),
+                    }
+                    if (value.length < 10) {
+                      return S.of(context).valaidat_num1;
+                    }
+                    return null;
+                  },
+                ),
 
                 SizedBox(height: 20),
                 CustomFormTextField(
-                  controller: emailController,
+                  controller: regesterData.emailController,
                   onChanged: (data) {
-                    email = data;
+                    regesterData.email = data;
                   },
                   labelText: S.of(context).email,
                   validator: (data) {
@@ -220,9 +161,9 @@ class _RegesterPageState extends State<RegesterPage> {
                 ),
                 SizedBox(height: 20),
                 CustomFormTextField(
-                  controller: passwordController,
+                  controller: regesterData.passwordController,
                   onChanged: (data) {
-                    password = data;
+                    regesterData.password = data;
                   },
                   labelText: S.of(context).password,
                   obscureText: true,
@@ -230,32 +171,36 @@ class _RegesterPageState extends State<RegesterPage> {
                 ),
                 SizedBox(height: 20),
                 CustomFormTextField(
-                  controller: confirmPasswordController,
+                  controller: regesterData.confirmPasswordController,
                   onChanged: (data) {
-                    confirmPassword = data;
-                    if (confirmPassword != password) {
+                    regesterData.confirmPassword = data;
+                    if (regesterData.confirmPassword != regesterData.password) {
                       setState(() {
-                        passwordError = S.of(context).validat_pass;
+                        regesterData.passwordError = S.of(context).validat_pass;
                       });
                     } else {
                       setState(() {
-                        passwordError = null;
+                        regesterData.passwordError = null;
                       });
                     }
                   },
                   labelText: S.of(context).confirm_password,
                   obscureText: true,
                   usePassword: true,
-                  errorText: passwordError,
+                  errorText: regesterData.passwordError,
                 ),
                 SizedBox(height: 40),
                 CustomButton(
                   size: 200,
                   text: S.of(context).create_account,
                   onTap: () async {
-                    await register();
-                   
-                    setState(() => isLoading = false);
+                    setState(() {
+                      regesterData.isLoading = true;
+                    });
+                    await regesterData.register(context);
+                    setState(() {
+                      regesterData.isLoading = false;
+                    });
                   },
                 ),
                 Row(

@@ -2,15 +2,11 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:logo_app_traning/Cubit/translate/translate_cubit.dart';
-import 'package:logo_app_traning/generated/intl/messages_ar.dart';
 import 'package:logo_app_traning/generated/l10n.dart';
-import 'package:logo_app_traning/helper/api_servic.dart';
 import 'package:logo_app_traning/helper/custom_button.dart';
-import 'package:logo_app_traning/helper/custom_snack_bar.dart';
 import 'package:logo_app_traning/helper/custom_text_field.dart';
-import 'package:logo_app_traning/views/home_view.dart';
-import 'package:logo_app_traning/views/regester_page.dart';
-import 'dart:convert';
+import 'package:logo_app_traning/views/Login/login_data.dart';
+import 'package:logo_app_traning/views/Regester/regester_page.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
 class LoginPage extends StatefulWidget {
@@ -22,79 +18,18 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final _formKey = GlobalKey<FormState>();
+  // bool isLoading = false;
+  // bool isArabic = true;
 
-  final TextEditingController phoneController = TextEditingController(
-    text: '05',
-  );
-  final TextEditingController passwordController = TextEditingController();
-
-  bool isLoading = false;
-  bool isArabic = true;
-
-  Future<bool> login() async {
-    if (!_formKey.currentState!.validate()) return false;
-
-    setState(() => isLoading = true);
-
-    try {
-      final response = await ApiService().loginUser(
-        phoneController.text.trim(),
-        passwordController.text.trim(),
-      );
-      final data = jsonDecode(response.body);
-      if (response.statusCode == 200) {
-        final user = data['data']['user'];
-
-        final isVerified = user['phoneNumberConfirmed'] == true;
-
-        debugPrint('🔍 phoneNumberConfirmed: ${user['phoneNumberConfirmed']}');
-
-        log('✅ تسجيل الدخول ناجح. isVerified = $isVerified');
-        if (!isVerified) {
-          await ApiService().regenerateOtp(phoneController.text.trim());
-          // المستخدم لم يؤكد الرقم → صفحة التحقق
-          Navigator.pushReplacementNamed(
-            context,
-            'verfiyPage',
-            arguments: phoneController.text.trim(),
-          );
-          showSnackBar(
-            context,
-            data["message"] ?? 'تم تسجيل الدخول بنجاح',
-            Colors.greenAccent,
-          );
-        } else {
-          // المستخدم مفعل → صفحة الهوم
-          Navigator.pushReplacementNamed(context, 'homeView');
-        }
-
-        return true;
-      } else {
-        showSnackBar(
-          context,
-          data["message"] ?? 'فشل تسجيل  الدخول',
-          Colors.red,
-        );
-        return false;
-      }
-    } catch (e) {
-      showSnackBar(context, 'حدث خطأ أثناء تسجيل الدخول', Colors.orange);
-      print(e);
-      return false;
-    } finally {
-      setState(() => isLoading = false);
-    }
-  }
-
+  LoginData loginData = LoginData();
   @override
   Widget build(BuildContext context) {
     return ModalProgressHUD(
-      inAsyncCall: isLoading,
+      inAsyncCall: loginData.isLoading,
       child: Scaffold(
         backgroundColor: Colors.white,
         body: Form(
-          key: _formKey,
+          key: loginData.formKey,
           child: SingleChildScrollView(
             padding: EdgeInsets.symmetric(horizontal: 16),
             child: Center(
@@ -128,24 +63,30 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   const SizedBox(height: 30),
                   CustomFormTextField(
-                    controller: phoneController,
+                    controller: loginData.phoneController,
                     keyboardType: TextInputType.phone,
                     onChanged: (data) {
                       if (!data.startsWith('05')) {
-                        phoneController.text = '05';
+                        loginData.phoneController.text = '05';
                       }
 
-                      phoneController.selection = TextSelection.fromPosition(
-                        TextPosition(offset: phoneController.text.length),
-                      );
-                      if (phoneController.text.length > 10) {
-                        phoneController.text = phoneController.text.substring(
-                          0,
-                          10,
-                        );
-                        phoneController.selection = TextSelection.fromPosition(
-                          TextPosition(offset: phoneController.text.length),
-                        );
+                      loginData.phoneController.selection =
+                          TextSelection.fromPosition(
+                            TextPosition(
+                              offset: loginData.phoneController.text.length,
+                            ),
+                          );
+                      if (loginData.phoneController.text.length > 10) {
+                        loginData.phoneController.text = loginData
+                            .phoneController
+                            .text
+                            .substring(0, 10);
+                        loginData.phoneController.selection =
+                            TextSelection.fromPosition(
+                              TextPosition(
+                                offset: loginData.phoneController.text.length,
+                              ),
+                            );
                       }
                     },
                     labelText: S.of(context).phone_number,
@@ -167,7 +108,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   const SizedBox(height: 20),
                   CustomFormTextField(
-                    controller: passwordController,
+                    controller: loginData.passwordController,
                     labelText: S.of(context).password,
                     obscureText: true,
                     usePassword: true,
@@ -203,8 +144,14 @@ class _LoginPageState extends State<LoginPage> {
                   CustomButton(
                     size: 250,
                     text: S.of(context).login,
-                    onTap: () {
-                      login();
+                    onTap: () async {
+                      setState(() {
+                        loginData.isLoading = true;
+                      });
+                    await  loginData.login(context);
+                      setState(() {
+                        loginData.isLoading = false;
+                      });
                     },
                   ),
                   const SizedBox(height: 20),
@@ -251,8 +198,8 @@ class _LoginPageState extends State<LoginPage> {
                       GestureDetector(
                         onTap: () {
                           setState(() {
-                            isArabic = !isArabic;
-                            if (isArabic) {
+                            loginData.isArabic = !loginData.isArabic;
+                            if (loginData.isArabic) {
                               TranslateCubit.get(
                                 context,
                               ).changeLanguage(Locale('ar'));
@@ -274,7 +221,7 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           child: AnimatedAlign(
                             duration: Duration(milliseconds: 300),
-                            alignment: isArabic
+                            alignment: loginData.isArabic
                                 ? Alignment.centerRight
                                 : Alignment.centerLeft,
                             curve: Curves.easeInOut,
@@ -297,7 +244,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ],
                   ),
-                  Text('${isArabic ? 'العربية' : 'English'}'),
+                  Text('${loginData.isArabic ? 'العربية' : 'English'}'),
                   SizedBox(height: 50),
                 ],
               ),

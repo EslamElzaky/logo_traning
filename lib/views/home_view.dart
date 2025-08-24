@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:logo_app_traning/generated/l10n.dart';
@@ -9,7 +8,7 @@ import 'package:logo_app_traning/helper/custom_navigation_bottom.dart';
 import 'package:logo_app_traning/helper/custom_view_item.dart';
 
 class HomeView extends StatefulWidget {
-  HomeView({super.key});
+  const HomeView({super.key});
 
   static String id = 'homeView';
 

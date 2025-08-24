@@ -7,6 +7,7 @@ import 'package:logo_app_traning/helper/custom_button.dart';
 import 'package:logo_app_traning/helper/custom_snack_bar.dart';
 import 'package:logo_app_traning/helper/custom_text_field.dart';
 import 'package:logo_app_traning/helper/api_servic.dart';
+import 'package:logo_app_traning/views/ForgetPassword/forget_data.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
 class ForgetPassword extends StatefulWidget {
@@ -17,38 +18,7 @@ class ForgetPassword extends StatefulWidget {
 }
 
 class _ForgetPasswordState extends State<ForgetPassword> {
-  bool isLoading = false;
-
-  final formKey = GlobalKey<FormState>();
-  final TextEditingController phoneController = TextEditingController(
-    text: '05',
-  );
-  void _forgetPassword() async {
-    if (!formKey.currentState!.validate()) return;
-    setState(() => isLoading = true);
-    try {
-      final response = await ApiService().forgetPassword(
-        phoneController.text.trim(),
-      );
-      final data = jsonDecode(response.body);
-      if (response.statusCode == 200) {
-        
-            showSnackBar(context,data["message"] ?? 'تم ارسال كود التحقق بنجاح',Colors.green);
-        Navigator.pushNamed(
-          context,
-          'resetpassword',
-          arguments: phoneController.text.trim(),
-        );
-      } else {
-        showSnackBar(context,data["message"] ?? 'فشل في إرسال رمز التحقق:',Colors.amber);
-      }
-    } catch (e) {
-          showSnackBar(context,  'فشل في إرسال رمز التحقق:',Colors.redAccent);
-    } finally {
-      setState(() => isLoading = false);
-    }
-  }
-
+  ForgetData forgetData = ForgetData();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,15 +27,15 @@ class _ForgetPasswordState extends State<ForgetPassword> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.black, size: 24),
           onPressed: () {
-            Navigator.pop(context); 
+            Navigator.pop(context);
           },
         ),
       ),
       backgroundColor: Colors.white,
       body: ModalProgressHUD(
-        inAsyncCall: isLoading,
+        inAsyncCall: forgetData.isLoading,
         child: Form(
-          key: formKey,
+          key: forgetData.formKey,
           child: Center(
             child: Padding(
               padding: const EdgeInsets.only(left: 16.0, right: 16, bottom: 40),
@@ -103,24 +73,30 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                   ),
                   SizedBox(height: 60),
                   CustomFormTextField(
-                    controller: phoneController,
+                    controller: forgetData.phoneController,
                     keyboardType: TextInputType.phone,
                     onChanged: (data) {
                       if (!data.startsWith('05')) {
-                        phoneController.text = '05';
+                        forgetData.phoneController.text = '05';
                       }
 
-                      phoneController.selection = TextSelection.fromPosition(
-                        TextPosition(offset: phoneController.text.length),
-                      );
-                      if (phoneController.text.length > 10) {
-                        phoneController.text = phoneController.text.substring(
-                          0,
-                          10,
-                        );
-                        phoneController.selection = TextSelection.fromPosition(
-                          TextPosition(offset: phoneController.text.length),
-                        );
+                      forgetData.phoneController.selection =
+                          TextSelection.fromPosition(
+                            TextPosition(
+                              offset: forgetData.phoneController.text.length,
+                            ),
+                          );
+                      if (forgetData.phoneController.text.length > 10) {
+                        forgetData.phoneController.text = forgetData
+                            .phoneController
+                            .text
+                            .substring(0, 10);
+                        forgetData.phoneController.selection =
+                            TextSelection.fromPosition(
+                              TextPosition(
+                                offset: forgetData.phoneController.text.length,
+                              ),
+                            );
                       }
                     },
                     labelText: S.of(context).phone_number,
@@ -144,7 +120,13 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                     size: 200,
                     text: S.of(context).send,
                     onTap: () {
-                      _forgetPassword();
+                      setState(() {
+                        forgetData.isLoading = false;
+                      });
+                      forgetData.forgetPassword(context);
+                      setState(() {
+                        forgetData.isLoading = false;
+                      });
                     },
                   ),
                 ],

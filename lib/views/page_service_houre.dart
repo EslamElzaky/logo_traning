@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:logo_app_traning/generated/l10n.dart';
+import 'package:logo_app_traning/helper/custom_button.dart';
 import 'package:logo_app_traning/helper/custom_drawr.dart';
 import 'package:logo_app_traning/helper/custom_navigation_bottom.dart';
 import 'package:logo_app_traning/helper/custom_view_item.dart';
-import 'package:logo_app_traning/views/home_view.dart';
 
 class ServiceHoure extends StatefulWidget {
   const ServiceHoure({super.key});
@@ -20,7 +19,6 @@ class _ServiceHoureState extends State<ServiceHoure> {
       bottomNavigationBar: BottomBar(),
       drawer: CustomDrawer(),
       appBar: AppBar(
-      
         title: Text(
           'اختر الخدمه',
           style: TextStyle(
@@ -49,12 +47,78 @@ class _ServiceHoureState extends State<ServiceHoure> {
             ),
 
             SizedBox(height: 10),
-            ViewItems(titel: "عامله تنظيف", subtitel: "تقدم الخدمة بعقودشهريه من شهرالي24شهر"),
+            ViewItems(
+              onTap: () {
+                DialogView(context);
+              },
+              titel: "عامله تنظيف",
+              subtitel: "تقدم الخدمة بعقودشهريه من شهرالي24شهر",
+            ),
             SizedBox(height: 20),
-            ViewItems(titel:  "عامله تنظيف بالمواد المطلوبة", subtitel: "تقدم الخدمة بعقودشهريه من شهرالي24شهر"),
+            ViewItems(
+              onTap: () {
+                DialogView(context);
+              },
+              titel: "عامله تنظيف بالمواد المطلوبة",
+              subtitel: "تقدم الخدمة بعقودشهريه من شهرالي24شهر",
+            ),
           ],
         ),
       ),
+    );
+  }
+
+  // ignore: non_constant_identifier_names
+  void DialogView(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          // title: Text('هذه الخدمه للعائلات فقط'),
+          contentTextStyle: TextStyle(color: Colors.white),
+
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Image.asset('assets/images/Layer 2.png', width: 56, height: 48),
+              SizedBox(height: 20),
+              Text(
+                'هذه الخدمة تقدم للعائلات فقط',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+              ),
+              Text(
+                textAlign: TextAlign.center,
+                'نعتذر علي عدم تقديم الخدمه في حاله عدم وجود سيدة بالمنزل',
+                style: TextStyle(color: Colors.black, fontSize: 14),
+              ),
+              SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  CustomButton(
+                    size: 100,
+                    color: Colors.white,
+                    colorText: Colors.black,
+                    text: 'رجوع',
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                  CustomButton(size: 100, text: 'التالي', color: Colors.black),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

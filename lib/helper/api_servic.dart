@@ -1,10 +1,11 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'package:http/http.dart' as http;
+import 'package:logo_app_traning/model/login_model.dart';
 import 'package:logo_app_traning/model/regester_model.dart';
 
 class ApiService {
-  static const String baseUrl = 'https://crmdemo.excp.sa:8004/Api';
+  static const String baseUrl = 'https://crmtest.massadrhr.com:8006';
   Map<String, String> headers = {
     'platform': 'android',
     'version': '7.0.0',
@@ -33,13 +34,15 @@ class ApiService {
   }
 
   Future<http.Response> registerUser(SignUpUserPost user) async {
-    final url = Uri.parse('$baseUrl/ar/Account/Register');
+    final url = Uri.parse('$baseUrl/ar/api/Account/Register');
     final response = await http.post(
       url,
       headers: headers,
       body: jsonEncode(user.toJson()),
     );
+    Regester regester = Regester.fromJson(jsonDecode(response.body));
     log('${response.body}, Status Code: ${response.statusCode}');
+
     requestLog(
       url: url.toString(),
       httpType: 'POST',
@@ -52,7 +55,7 @@ class ApiService {
   }
 
   Future<http.Response> loginUser(String phoneNumber, String password) async {
-    final url = Uri.parse('$baseUrl/ar/Account/Login');
+    final url = Uri.parse('$baseUrl/ar/api/Account/Login');
     final body = {"userName": phoneNumber, "password": password};
     final response = await http.post(
       url,
@@ -70,9 +73,19 @@ class ApiService {
     return response;
   }
 
-  Future<http.Response> verifyOtp(String phoneNumber, String otp) async {
-    final url = Uri.parse('$baseUrl/ar/Account/VerifyCode');
-    final body = {'phoneNumber': phoneNumber, 'code': otp};
+  Future<http.Response> verifyOtp(
+    String phoneNumber,
+    String otp,
+    String password,
+    String userId,
+  ) async {
+    final url = Uri.parse('$baseUrl/ar/api/Account/VerifyCode');
+    final body = {
+      'phoneNumber': phoneNumber,
+      'code': otp,
+      'password': password,
+      'userId': userId,
+    };
     final response = await http.post(
       url,
       headers: headers,
@@ -90,32 +103,23 @@ class ApiService {
   }
 
   Future<http.Response> regenerateOtp(String phoneNumber) async {
-    final url = Uri.parse('$baseUrl/ar/Account/ReGenrateCode');
+    final url = Uri.parse('$baseUrl/ar/api/Account/ReGenrateCode');
     final response = await http.post(
       url,
       headers: headers,
       body: jsonEncode({'phoneNumber': phoneNumber}),
     );
-    log('Regenerate OTP response: ${response.body}');
-    requestLog(
-      url: url.toString(),
-      httpType: 'POST',
-      headers: headers,
-      requestBody: {'phoneNumber': phoneNumber},
-      statusCode: response.statusCode,
-      responseBody: response.body,
-    );
+
     return response;
   }
 
   Future<http.Response> forgetPassword(String phoneNumber) async {
-    final url = Uri.parse('$baseUrl/ar/Account/ForgotPassword');
+    final url = Uri.parse('$baseUrl/ar/Account/api/ForgotPassword');
     final response = await http.post(
       url,
       headers: headers,
       body: jsonEncode({'phoneNumber': phoneNumber}),
     );
-    log('Forget Password response: ${response.body}');
     return response;
   }
 
@@ -123,18 +127,20 @@ class ApiService {
     String code,
     String password,
     String confirmPasswod,
+    String phoneNumber,
   ) async {
-    final url = Uri.parse('$baseUrl/ar/Account/ResetPassword');
+    final url = Uri.parse('$baseUrl/ar/Account/api/ResetPassword');
     final response = await http.post(
       url,
       headers: headers,
       body: jsonEncode({
+        'phoneNumber': phoneNumber,
         'code': code,
         'password': password,
         'confirmPassword': confirmPasswod,
       }),
     );
-    log('Forget Password response: ${response.body}');
+
     return response;
   }
 }
