@@ -114,7 +114,7 @@ class ApiService {
   }
 
   Future<http.Response> forgetPassword(String phoneNumber) async {
-    final url = Uri.parse('$baseUrl/ar/Account/api/ForgotPassword');
+    final url = Uri.parse('$baseUrl/ar/api/Account/ForgotPassword');
     final response = await http.post(
       url,
       headers: headers,
@@ -129,7 +129,7 @@ class ApiService {
     String confirmPasswod,
     String phoneNumber,
   ) async {
-    final url = Uri.parse('$baseUrl/ar/Account/api/ResetPassword');
+    final url = Uri.parse('$baseUrl/ar/api/Account/ResetPassword');
     final response = await http.post(
       url,
       headers: headers,

@@ -113,7 +113,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                       });
                    await  resetData. resetPassword(context);
                        setState(() {
-                        resetData.isLoading = true;
+                        resetData.isLoading = false;
                       });
                     },
                   ),

@@ -21,19 +21,13 @@ class ResetData {
     if (!formKey.currentState!.validate()) {
       return;
     }
-
     if (passwordController.text != confirmPasswordController.text) {
       showSnackBar(
-       
         'كلمة المرور وتأكيد كلمة المرور غير متطابقتين',
         Colors.yellow,
       );
-  
-      return;
+        return;
     }
-
-    
-
     try {
       final response = await ApiService().resetPssword(
         codeController.text.trim(),

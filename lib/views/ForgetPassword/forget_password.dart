@@ -1,12 +1,8 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:logo_app_traning/generated/l10n.dart';
 import 'package:logo_app_traning/helper/custom_button.dart';
-import 'package:logo_app_traning/helper/custom_snack_bar.dart';
 import 'package:logo_app_traning/helper/custom_text_field.dart';
-import 'package:logo_app_traning/helper/api_servic.dart';
 import 'package:logo_app_traning/views/ForgetPassword/forget_data.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
@@ -21,20 +17,20 @@ class _ForgetPasswordState extends State<ForgetPassword> {
   ForgetData forgetData = ForgetData();
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black, size: 24),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+    return ModalProgressHUD(
+       inAsyncCall: forgetData.isLoading,
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back, color: Colors.black, size: 24),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
         ),
-      ),
-      backgroundColor: Colors.white,
-      body: ModalProgressHUD(
-        inAsyncCall: forgetData.isLoading,
-        child: Form(
+        backgroundColor: Colors.white,
+        body: Form(
           key: forgetData.formKey,
           child: Center(
             child: Padding(
@@ -66,7 +62,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                     S.of(context).regster_num,
                     style: TextStyle(
                       fontSize: 14,
-
+        
                       color: Colors.black,
                       fontFamily: 'Alexandria',
                     ),
@@ -79,7 +75,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                       if (!data.startsWith('05')) {
                         forgetData.phoneController.text = '05';
                       }
-
+        
                       forgetData.phoneController.selection =
                           TextSelection.fromPosition(
                             TextPosition(
@@ -119,11 +115,11 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                   CustomButton(
                     size: 200,
                     text: S.of(context).send,
-                    onTap: () {
+                    onTap: () async {
                       setState(() {
-                        forgetData.isLoading = false;
+                        forgetData.isLoading = true;
                       });
-                      forgetData.forgetPassword(context);
+                      await forgetData.forgetPassword(context);
                       setState(() {
                         forgetData.isLoading = false;
                       });
