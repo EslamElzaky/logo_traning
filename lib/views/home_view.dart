@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:logo_app_traning/generated/l10n.dart';
+import 'package:logo_app_traning/helper/custom_app_bar.dart';
 import 'package:logo_app_traning/helper/custom_drawr.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:logo_app_traning/helper/custom_navigation_bottom.dart';
@@ -23,25 +24,9 @@ class _HomeViewState extends State<HomeView> {
     return Scaffold(
       drawer: CustomDrawer(),
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        
-        title: Text(
-          S.of(context).titel_home,
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
-          ),
-        ),
-        centerTitle: true,
-        backgroundColor: Colors.grey,
-        actions: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Icon(Icons.notifications, size: 35),
-          ),
-        ],
-      ),
+      appBar: customAppBar(text: S.of(context).titel_home , icon:Icons.notifications,)
+      
+      ,
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.only(top: 20, left: 15, right: 15),
