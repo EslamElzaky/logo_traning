@@ -2,9 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logo_app_traning/Cubit/otp_cubit.dart';
 import 'package:logo_app_traning/Cubit/translate/translate_cubit.dart';
+import 'package:logo_app_traning/selectPackags/select_package.dart';
 import 'package:logo_app_traning/generated/l10n.dart';
 import 'package:logo_app_traning/helper/custom_snack_bar.dart';
 import 'package:logo_app_traning/views/ForgetPassword/forget_password.dart';
+import 'package:logo_app_traning/views/Select_location/page_location.dart';
+import 'package:logo_app_traning/views/Select_location/enter_locaction.dart';
+import 'package:logo_app_traning/views/Select_location/select_location_atMaps.dart';
 import 'package:logo_app_traning/views/home_view.dart';
 import 'package:logo_app_traning/views/Login/login_page.dart';
 import 'package:logo_app_traning/views/page_service_houre.dart';
@@ -54,6 +58,10 @@ class MyApp extends StatelessWidget {
               'forgetPassword': (context) => ForgetPassword(),
               'resetpassword': (context) => ResetPassword(),
               'serviceHoure': (context) => ServiceHoure(),
+              'pageLocation': (context)=> PageLocation(),
+              'selectLocation' :(context)=> SelectLocaction(),
+              'selectLocationMaps':(context)=>SelectLocationAtmaps(),
+              'selectPackage' :(context)=> Selectpackage()
             },
             initialRoute: LoginPage.id,
           );

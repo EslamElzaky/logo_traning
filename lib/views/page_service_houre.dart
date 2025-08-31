@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:logo_app_traning/helper/custom_app_bar.dart';
 import 'package:logo_app_traning/helper/custom_button.dart';
 import 'package:logo_app_traning/helper/custom_drawr.dart';
 import 'package:logo_app_traning/helper/custom_navigation_bottom.dart';
@@ -18,24 +19,7 @@ class _ServiceHoureState extends State<ServiceHoure> {
       backgroundColor: Colors.white,
       bottomNavigationBar: BottomBar(),
       drawer: CustomDrawer(),
-      appBar: AppBar(
-        title: Text(
-          'اختر الخدمه',
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
-          ),
-        ),
-        centerTitle: true,
-        backgroundColor: Colors.grey,
-        actions: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Icon(Icons.notifications, size: 35),
-          ),
-        ],
-      ),
+      appBar: customAppBar(text: 'اختر الخدمه', icon: Icons.notifications),
       body: Padding(
         padding: const EdgeInsets.only(top: 20, left: 15, right: 15),
         child: Column(
@@ -112,7 +96,14 @@ class _ServiceHoureState extends State<ServiceHoure> {
                       Navigator.pop(context);
                     },
                   ),
-                  CustomButton(size: 100, text: 'التالي', color: Colors.black),
+                  CustomButton(
+                    size: 100,
+                    text: 'التالي',
+                    color: Colors.black,
+                    onTap: () {
+                      Navigator.pushNamed(context, 'pageLocation');
+                    },
+                  ),
                 ],
               ),
             ],
