@@ -1,14 +1,20 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 class ViewItems extends StatelessWidget {
   ViewItems({
     super.key,
     required this.titel,
     required this.subtitel,
+    required this.imageUrl,
     this.onTap,
   });
   final String titel;
   final String subtitel;
+  final String imageUrl;
+
   Function()? onTap;
   @override
   Widget build(BuildContext context) {
@@ -16,6 +22,7 @@ class ViewItems extends StatelessWidget {
       onTap: () {
         if (onTap != null) {
           onTap!();
+          print(imageUrl);
         }
       },
       child: Container(
@@ -37,6 +44,7 @@ class ViewItems extends StatelessWidget {
                   // shape: BoxShape.rectangle,
                   color: Colors.grey[500],
                 ),
+                child: SvgPicture.network(imageUrl),
               ),
             ),
             Column(

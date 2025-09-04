@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:logo_app_traning/model/login_model.dart';
 import 'package:logo_app_traning/model/regester_model.dart';
 
 class ApiService {
@@ -11,6 +11,7 @@ class ApiService {
     'version': '7.0.0',
     'Content-Type': 'application/json',
     'Accept': 'application/json',
+    "source": "1",
   };
   void requestLog({
     required String url,
@@ -33,92 +34,93 @@ class ApiService {
     log('Body: ${jsonEncode(responseBody)}');
   }
 
+  Future<http.Response> request({
+    required String url,
+    required String method,
+    Map<String, dynamic>? body,
+  }) async {
+    http.Response response;
+    final Url = Uri.parse('$baseUrl$url');
+
+    if (method.toLowerCase() == 'get') {
+      response = await http.get(Url, headers: headers);
+    } else if (method.toLowerCase() == "post") {
+      response = await http.post(Url, headers: headers, body: jsonEncode(body));
+    } else {
+      throw Exception("Unsupported method: $method");
+    }
+    if (response.statusCode == 200) {
+      requestLog(
+        url: Url.toString(),
+        httpType: method,
+        headers: headers,
+        statusCode: response.statusCode,
+        responseBody: response.body,
+      );
+      return response;
+    } else {
+      throw Exception(
+        'Failed to load data. Status code: ${response.statusCode}',
+      );
+    }
+  }
+
   Future<http.Response> registerUser(SignUpUserPost user) async {
-    final url = Uri.parse('$baseUrl/ar/api/Account/Register');
-    final response = await http.post(
-      url,
-      headers: headers,
-      body: jsonEncode(user.toJson()),
+    final response = await ApiService().request(
+      method: "post",
+      url: '/ar/api/Account/Register',
+      body: user.toJson(),
     );
-    Regester regester = Regester.fromJson(jsonDecode(response.body));
+
     log('${response.body}, Status Code: ${response.statusCode}');
 
-    requestLog(
-      url: url.toString(),
-      httpType: 'POST',
-      headers: headers,
-      requestBody: user.toJson(),
-      statusCode: response.statusCode,
-      responseBody: response.body,
-    );
     return response;
   }
 
   Future<http.Response> loginUser(String phoneNumber, String password) async {
-    final url = Uri.parse('$baseUrl/ar/api/Account/Login');
-    final body = {"userName": phoneNumber, "password": password};
-    final response = await http.post(
-      url,
-      headers: headers,
-      body: jsonEncode({"userName": phoneNumber, "password": password}),
+    final response = await ApiService().request(
+      method: "post",
+      url: '/ar/api/Account/Login',
+      body: {"userName": phoneNumber, "password": password},
     );
-    requestLog(
-      url: url.toString(),
-      httpType: 'POST',
-      headers: headers,
-      requestBody: body,
-      statusCode: response.statusCode,
-      responseBody: response.body,
-    );
+
     return response;
   }
 
-  Future<http.Response> verifyOtp(
+  Future<dynamic> verifyOtp(
     String phoneNumber,
     String otp,
     String password,
     String userId,
   ) async {
-    final url = Uri.parse('$baseUrl/ar/api/Account/VerifyCode');
-    final body = {
-      'phoneNumber': phoneNumber,
-      'code': otp,
-      'password': password,
-      'userId': userId,
-    };
-    final response = await http.post(
-      url,
-      headers: headers,
-      body: jsonEncode(body),
+    final response = await request(
+      method: "post",
+      url: '/ar/api/Account/VerifyCode',
+      body: {
+        'phoneNumber': phoneNumber,
+        'code': otp,
+        'password': password,
+        'userId': userId,
+      },
     );
-    requestLog(
-      url: url.toString(),
-      httpType: 'POST',
-      headers: headers,
-      requestBody: body,
-      statusCode: response.statusCode,
-      responseBody: response.body,
-    );
+
     return response;
   }
 
   Future<http.Response> regenerateOtp(String phoneNumber) async {
-    final url = Uri.parse('$baseUrl/ar/api/Account/ReGenrateCode');
-    final response = await http.post(
-      url,
-      headers: headers,
-      body: jsonEncode({'phoneNumber': phoneNumber}),
+    final response = await request(
+      method: "post",
+      url: '/ar/api/Account/ReGenrateCode',
+      body: {'phoneNumber': phoneNumber},
     );
-
     return response;
   }
 
   Future<http.Response> forgetPassword(String phoneNumber) async {
-    final url = Uri.parse('$baseUrl/ar/api/Account/ForgotPassword');
-    final response = await http.post(
-      url,
-      headers: headers,
-      body: jsonEncode({'phoneNumber': phoneNumber}),
+    final response = await request(
+      method: "post",
+      url: '/ar/api/Account/ForgotPassword',
+      body: {'phoneNumber': phoneNumber},
     );
     return response;
   }
@@ -129,18 +131,36 @@ class ApiService {
     String confirmPasswod,
     String phoneNumber,
   ) async {
-    final url = Uri.parse('$baseUrl/ar/api/Account/ResetPassword');
-    final response = await http.post(
-      url,
-      headers: headers,
-      body: jsonEncode({
+    final response = await request(
+      method: "post",
+      url: '/ar/api/Account/ResetPassword',
+      body: {
         'phoneNumber': phoneNumber,
         'code': code,
         'password': password,
         'confirmPassword': confirmPasswod,
-      }),
+      },
+    );
+
+    return response;
+  }
+
+  Future<http.Response> getSlider() async {
+    final response = await request(method: "get", url: '/ar/api/Slider');
+
+    return response;
+  }
+
+  Future<http.Response> getService() async {
+    final response = await request(
+      method: "get",
+      url: '/ar/api/Service/ServicesForService?serviceType=1',
     );
 
     return response;
   }
 }
+
+
+
+

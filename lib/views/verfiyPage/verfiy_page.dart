@@ -201,7 +201,9 @@ VerfiyData verfiyData=VerfiyData();
                             fontSize: 28,
                             backgroundColor: Colors.blueGrey.withOpacity(0.1),
                             borderRadius: BorderRadius.circular(8),
+                         
                           ),
+                          
                         ),
             
                         IconButton(

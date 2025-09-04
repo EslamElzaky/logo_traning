@@ -25,7 +25,7 @@ class LoginData {
       final data = jsonDecode(response.body);
       if (response.statusCode == 200) {
         final user = data['data']['user'];
-        final userId = data["userId"];
+        final userId = user["id"];
 
         final isVerified = user['phoneNumberConfirmed'] == true;
 

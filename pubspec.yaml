@@ -49,6 +49,7 @@ dependencies:
   get: ^4.7.2
   carousel_slider: ^5.1.1
   font_awesome_flutter: ^10.9.0
+  flutter_svg: ^2.2.0
  
 
 dev_dependencies:

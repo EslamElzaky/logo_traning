@@ -71,7 +71,13 @@ class _SelectpackageState extends State<Selectpackage> {
 
         child: Align(
           alignment: Alignment.bottomCenter,
-          child: CustomButton(size: 250, text: 'صمم باقة تناسبك'),
+          child: CustomButton(
+            size: 250,
+            text: 'صمم باقة تناسبك',
+            onTap: () {
+              Navigator.pushNamed(context, 'selectOver');
+            },
+          ),
         ),
       ),
       bottomNavigationBar: BottomBar(),
