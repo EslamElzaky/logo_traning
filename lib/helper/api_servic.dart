@@ -159,8 +159,43 @@ class ApiService {
 
     return response;
   }
+
+  Future<http.Response> getCity() async {
+    final response = await request(url: '/ar/api/City/Active', method: 'get');
+    return response;
+  }
+
+  Future<http.Response> getHouseType() async {
+    final response = await request(
+      url: '/ar/api/ContactAddress/HousingTypes',
+      method: 'get',
+    );
+    return response;
+  }
+
+  Future<http.Response> getHouseFloor() async {
+    final response = await request(
+      url: '/ar/api/ContactAddress/HousingFloors',
+      method: 'get',
+    );
+    return response;
+  }
+
+  Future<http.Response> getDistricts(String cityId) async {
+    final response = await request(
+      url: '/ar/api/City/Districts?cityId=$cityId',
+      method: 'get',
+    );
+    return response;
+  }
+
+ 
+
+  Future<http.Response> validationDistricts(String districtId) async {
+    final response = await request(
+      url: '/ar/api/City/IsDistrictAvailableForService?districtId=$districtId',
+      method: 'get',
+    );
+    return response;
+  }
 }
-
-
-
-

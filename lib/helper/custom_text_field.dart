@@ -63,28 +63,28 @@ class _CustomFormTextFieldState extends State<CustomFormTextField> {
       cursorColor: Colors.black,
       obscureText: widget.obscureText,
       readOnly: widget.readOnly,
-
       onChanged: widget.onChanged,
-
       validator: (data) {
         if (data?.isEmpty ?? true) {
-          
-          return  S.of(context).field + widget.labelText! + S.of(context).required; 
-        } 
+          return S.of(context).field +
+              widget.labelText! +
+              S.of(context).required;
+        }
         if (widget.validator != null) {
           return widget.validator!(data);
         }
-
         return null;
       },
 
       decoration: InputDecoration(
+        alignLabelWithHint: true,
         errorText: widget.errorText,
         prefixText: widget.prefixText,
-        labelText: widget.labelText,
-        labelStyle: TextStyle(color: Colors.black, fontSize: 22),
-        floatingLabelBehavior: FloatingLabelBehavior.always,
         hintText: widget.hintText,
+        hintStyle: TextStyle(fontSize: 12, color: Colors.black),
+        labelText: widget.labelText,
+        labelStyle: TextStyle(color: Colors.black, fontSize: 20),
+        floatingLabelBehavior: FloatingLabelBehavior.auto,
         suffixIcon: widget.usePassword
             ? GestureDetector(
                 onTap: () {
@@ -101,7 +101,6 @@ class _CustomFormTextFieldState extends State<CustomFormTextField> {
               )
             : const SizedBox.shrink(),
 
-        hintStyle: const TextStyle(color: Colors.black),
         enabledBorder: OutlineInputBorder(
           borderSide: const BorderSide(color: Colors.black),
           borderRadius: BorderRadius.circular(8),

@@ -10,12 +10,15 @@ class CustomDropdownField extends StatelessWidget {
     this.onSaved,
     this.isEnabled = true,
     this.validator,
+    this.menuMaxHeight = 250,
+    this.hinteText,
   });
-
+  final double menuMaxHeight;
   final List<String> items;
   final bool isEnabled;
   final String? value;
   final String labelText;
+  final String? hinteText;
   final Function(String?)? onChanged;
   final Function(String?)? onSaved;
   final String? Function(String?)? validator;
@@ -23,14 +26,15 @@ class CustomDropdownField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DropdownButtonFormField<String>(
+      menuMaxHeight: menuMaxHeight,
       icon: const Icon(Icons.arrow_drop_down, color: Colors.black),
       dropdownColor: Colors.grey,
       onSaved: onSaved,
+
       validator: (data) {
         if (data?.isEmpty ?? true) {
-          //لو هوا فاضي يبقي )(صح ونفذ الريترن)
           return 'Field is required';
-        } // لو فيه validator جاي من برة، نفذه بعد التحقق من الفاضية
+        }
         if (validator != null) {
           return validator!(data);
         }
@@ -50,7 +54,7 @@ class CustomDropdownField extends StatelessWidget {
       decoration: InputDecoration(
         labelText: labelText,
         labelStyle: TextStyle(color: Colors.black),
-        hintText: labelText,
+        hintText: hinteText,
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
         enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(color: Colors.black),

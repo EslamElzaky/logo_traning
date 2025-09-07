@@ -7,10 +7,11 @@ import 'package:logo_app_traning/selectPackags/select_package.dart';
 import 'package:logo_app_traning/generated/l10n.dart';
 import 'package:logo_app_traning/helper/custom_snack_bar.dart';
 import 'package:logo_app_traning/views/ForgetPassword/forget_password.dart';
+import 'package:logo_app_traning/views/Select_location/EnterLocation/cubit/manage_location_cubit.dart';
 import 'package:logo_app_traning/views/Select_location/page_location.dart';
-import 'package:logo_app_traning/views/Select_location/enter_locaction.dart';
+import 'package:logo_app_traning/views/Select_location/EnterLocation/enter_locaction.dart';
 import 'package:logo_app_traning/views/Select_location/select_location_atMaps.dart';
-import 'package:logo_app_traning/HomePage/home_view.dart';
+import 'package:logo_app_traning/views/HomePage/home_view.dart';
 import 'package:logo_app_traning/views/Login/login_page.dart';
 import 'package:logo_app_traning/views/page_service_houre.dart';
 import 'package:logo_app_traning/views/Regester/regester_page.dart';
@@ -29,6 +30,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
+        BlocProvider(create: (context) => ManageLocationCubit()),
         BlocProvider(create: (context) => OtpCubit()),
         BlocProvider(create: (context) => TranslateCubit()),
       ],
@@ -36,7 +38,7 @@ class MyApp extends StatelessWidget {
       child: BlocBuilder<TranslateCubit, TranslateState>(
         builder: (context, state) {
           return MaterialApp(
-              scaffoldMessengerKey: rootScaffoldMessengerKey,
+            scaffoldMessengerKey: rootScaffoldMessengerKey,
             theme: ThemeData(
               brightness: Brightness.dark,
               fontFamily: 'Poppins',
@@ -59,11 +61,11 @@ class MyApp extends StatelessWidget {
               'forgetPassword': (context) => ForgetPassword(),
               'resetpassword': (context) => ResetPassword(),
               'serviceHoure': (context) => ServiceHoure(),
-              'pageLocation': (context)=> PageLocation(),
-              'selectLocation' :(context)=> SelectLocaction(),
-              'selectLocationMaps':(context)=>SelectLocationAtmaps(),
-              'selectPackage' :(context)=> Selectpackage(),
-              'selectOver' :(context)=> SelectOver(),
+              'pageLocation': (context) => PageLocation(),
+              'selectLocation': (context) => SelectLocaction(),
+              'selectLocationMaps': (context) => SelectLocationAtmaps(),
+              'selectPackage': (context) => Selectpackage(),
+              'selectOver': (context) => SelectOver(),
             },
             initialRoute: LoginPage.id,
           );

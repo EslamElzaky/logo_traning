@@ -31,21 +31,23 @@ class _ServiceHoureState extends State<ServiceHoure> {
             ),
 
             SizedBox(height: 10),
-            // ViewItems(
-            //   onTap: () {
-            //     DialogView(context);
-            //   },
-            //   titel: "عامله تنظيف",
-            //   subtitel: "تقدم الخدمة بعقودشهريه من شهرالي24شهر",
-            // ),
-            // SizedBox(height: 20),
-            // ViewItems(
-            //   onTap: () {
-            //     DialogView(context);
-            //   },
-            //   titel: "عامله تنظيف بالمواد المطلوبة",
-            //   subtitel: "تقدم الخدمة بعقودشهريه من شهرالي24شهر",
-            // ),
+            ViewItems(
+              imageUrl: "",
+              onTap: () {
+                DialogView(context);
+              },
+              titel: "عامله تنظيف",
+              subtitel: "تقدم الخدمة بعقودشهريه من شهرالي24شهر",
+            ),
+            SizedBox(height: 20),
+            ViewItems(
+              imageUrl: '',
+              onTap: () {
+                DialogView(context);
+              },
+              titel: "عامله تنظيف بالمواد المطلوبة",
+              subtitel: "تقدم الخدمة بعقودشهريه من شهرالي24شهر",
+            ),
           ],
         ),
       ),
