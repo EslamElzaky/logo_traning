@@ -3,16 +3,19 @@ import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 import 'package:logo_app_traning/helper/api_servic.dart';
 import 'package:logo_app_traning/views/Select_location/EnterLocation/enter_location_model_city.dart';
 
 part 'manage_location_state.dart';
 
 class ManageLocationCubit extends Cubit<ManageLocationState> {
-  ManageLocationCubit() : super(ManageLocationInitial());
+  ManageLocationCubit() : super(ManageLocationState());
 
+  static ManageLocationCubit get(context) => BlocProvider.of(context);
   Future<void> loadTitelData() async {
-    emit(ManageLocationLoading());
+    emit(state.copyWith(status: LocationStatus.loading));
     List<GetTitelModel> cities = [];
     List<GetTitelModel> houseTypes = [];
     List<GetTitelModel> houseFloors = [];
@@ -39,16 +42,21 @@ class ManageLocationCubit extends Cubit<ManageLocationState> {
       }
 
       emit(
-        ManageLocationSuccess(
+        state.copyWith(
           cities: cities,
           houseTypes: houseTypes,
           houseFloors: houseFloors,
-          districts: [],
+          status: LocationStatus.success,
         ),
       );
     } catch (e) {
       log("Error in loadInitialData: $e");
-      emit(ManageLocationFailure("Error in loadTitelData: $e"));
+      emit(
+        state.copyWith(
+          status: LocationStatus.failure,
+          message: 'خطأ في تحميل البيانات، حاول مرة اخرى',
+        ),
+      );
     }
   }
 
@@ -60,52 +68,143 @@ class ManageLocationCubit extends Cubit<ManageLocationState> {
         final List<dynamic> data = body["data"];
 
         final districts = data.map((e) => GetTitelModel.fromJson(e)).toList();
-
-        if (state is ManageLocationSuccess) {
-          final current = state as ManageLocationSuccess;
-          emit(current.copyWith(districts: districts));
-        } else {
-          emit(ManageLocationFailure("فشل تحميل الاحياء"));
-        }
+        emit(
+          state.copyWith(districts: districts, status: LocationStatus.success),
+        );
+        // if (state is ManageLocationSuccess) {
+        //   final current = state as ManageLocationSuccess;
+        //   emit(current.copyWith(districts: districts));
+      } else {
+        emit(
+          state.copyWith(
+            status: LocationStatus.failure,
+            message: 'فشل في تحميل الاحياء',
+          ),
+        );
       }
     } catch (e) {
-      emit(ManageLocationFailure("Error in fetchDistricts: $e"));
+      emit(
+        state.copyWith(
+          status: LocationStatus.failure,
+          message: 'Error in fetchDistricts: $e',
+        ),
+      );
     }
   }
 
-
   void selectCity(GetTitelModel city) {
-    if (state is ManageLocationSuccess) {
-      final current = state as ManageLocationSuccess;
-      emit(
-        current.copyWith(
-          selectedCity: city,
-          selectedDistrict: null,
-          districts: [],
-        ),
-      );
-      fetchDistricts(city.id ?? "");
+    emit(
+      state.copyWith(selectedCity: city, selectedDistrict: null, districts: []),
+    );
+    if (city.id != null) {
+      fetchDistricts(city.id!);
     }
   }
 
   void selectDistrict(GetTitelModel district) {
-    if (state is ManageLocationSuccess) {
-      final current = state as ManageLocationSuccess;
-      emit(current.copyWith(selectedDistrict: district));
-    }
+    emit(state.copyWith(selectedDistrict: district));
   }
 
   void selectHouseType(GetTitelModel type) {
-    if (state is ManageLocationSuccess) {
-      final current = state as ManageLocationSuccess;
-      emit(current.copyWith(selectedHouseType: type));
-    }
+    emit(state.copyWith(selectedHouseType: type));
   }
 
   void selectHouseFloor(GetTitelModel floor) {
-    if (state is ManageLocationSuccess) {
-      final current = state as ManageLocationSuccess;
-      emit(current.copyWith(selectedHouseFloor: floor));
+    emit(state.copyWith(selectedHouseFloor: floor));
+  }
+
+  Future<void> validateCity(String cityId) async {
+    try {
+      final response = await ApiService().validationCity(cityId);
+      final body = jsonDecode(response.body);
+
+      if (response.statusCode == 200) {
+        final apiStatus = body["status"];
+
+        if (apiStatus == 200) {
+          final city = state.cities.firstWhere((c) => c.id == cityId);
+          emit(
+            state.copyWith(
+              selectedCity: city,
+              status: LocationStatus.success,
+              message: 'المدينة متاحة للخدمة',
+            ),
+          );
+          await fetchDistricts(cityId);
+        } else if (apiStatus == 300) {
+          emit(
+            state.copyWith(
+              status: LocationStatus.failure,
+              message: body["message"] ?? "هذه المدينة غير متاحة للخدمة",
+            ),
+          );
+        } else {
+          emit(
+            state.copyWith(
+              status: LocationStatus.failure,
+              message: "استجابة غير متوقعة من السيرفر (${apiStatus ?? 'null'})",
+            ),
+          );
+        }
+      } else {
+        emit(
+          state.copyWith(
+            status: LocationStatus.failure,
+            message: "فشل الاتصال بالسيرفر (كود ${response.statusCode})",
+          ),
+        );
+      }
+    } catch (e) {
+      emit(
+        state.copyWith(
+          status: LocationStatus.failure,
+          message: "خطأ أثناء التحقق من المدينة: $e",
+        ),
+      );
+    }
+  }
+
+  Future<void> validateDistrict(String districtId) async {
+    try {
+      final response = await ApiService().validationDistricts(districtId);
+      final body = jsonDecode(response.body);
+
+      if (response.statusCode == 200) {
+        final apiStatus = body["status"];
+
+        final district = state.districts.firstWhereOrNull(
+          (d) => d.id == districtId,
+        );
+        emit(
+          state.copyWith(
+            selectedDistrict: district,
+            status: LocationStatus.success,
+            message: "هذا الحي متاح للخدمة",
+          ),
+        );
+      } else if (response.statusCode == 300) {
+        emit(
+          state.copyWith(
+            status: LocationStatus.failure,
+            message: body["message"] ?? " هذا الحي غير متاح للخدمة",
+          ),
+        );
+      } else {
+        emit(
+          state.copyWith(
+            status: LocationStatus.failure,
+            message: "فشل الاتصال بالسيرفر",
+          ),
+        );
+      }
+    } catch (e, s) {
+      log('$e', stackTrace: s);
+      emit(
+        state.copyWith(
+          status: LocationStatus.failure,
+          message: " خطأ أثناء التحقق من الحي: $e",
+        ),
+      );
     }
   }
 }

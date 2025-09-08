@@ -49,7 +49,7 @@ class ApiService {
     } else {
       throw Exception("Unsupported method: $method");
     }
-    if (response.statusCode == 200) {
+    
       requestLog(
         url: Url.toString(),
         httpType: method,
@@ -58,11 +58,7 @@ class ApiService {
         responseBody: response.body,
       );
       return response;
-    } else {
-      throw Exception(
-        'Failed to load data. Status code: ${response.statusCode}',
-      );
-    }
+    
   }
 
   Future<http.Response> registerUser(SignUpUserPost user) async {
@@ -189,7 +185,15 @@ class ApiService {
     return response;
   }
 
- 
+  Future<http.Response> validationCity(String cityId) async {
+    final response = await request(
+      url: '/ar/api/City/CheckCityAvailabilityForService?cityId=$cityId&serviceType=1',
+      method: 'get',
+    );
+    log("VALIDATE CITY URL: ${response.request?.url}");
+
+    return response;
+  }
 
   Future<http.Response> validationDistricts(String districtId) async {
     final response = await request(

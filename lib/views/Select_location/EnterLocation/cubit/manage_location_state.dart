@@ -1,12 +1,8 @@
 part of 'manage_location_cubit.dart';
 
-abstract class ManageLocationState {}
+enum LocationStatus { initial, loading, success, failure }
 
-final class ManageLocationInitial extends ManageLocationState {}
-
-final class ManageLocationLoading extends ManageLocationState {}
-
-final class ManageLocationSuccess extends ManageLocationState {
+class ManageLocationState extends Equatable {
   final List<GetTitelModel> cities;
   final List<GetTitelModel> houseTypes;
   final List<GetTitelModel> houseFloors;
@@ -16,19 +12,23 @@ final class ManageLocationSuccess extends ManageLocationState {
   final GetTitelModel? selectedDistrict;
   final GetTitelModel? selectedHouseType;
   final GetTitelModel? selectedHouseFloor;
+  final String? message;
+  final LocationStatus status;
 
-  ManageLocationSuccess({
-    required this.cities,
-    required this.houseTypes,
-    required this.houseFloors,
-    required this.districts,
+  const ManageLocationState({
+    this.cities = const [],
+    this.houseTypes = const [],
+    this.houseFloors = const [],
+    this.districts = const [],
     this.selectedCity,
     this.selectedDistrict,
     this.selectedHouseType,
     this.selectedHouseFloor,
+    this.status = LocationStatus.initial,
+    this.message,
   });
 
-  ManageLocationSuccess copyWith({
+  ManageLocationState copyWith({
     List<GetTitelModel>? cities,
     List<GetTitelModel>? houseTypes,
     List<GetTitelModel>? houseFloors,
@@ -37,8 +37,10 @@ final class ManageLocationSuccess extends ManageLocationState {
     GetTitelModel? selectedDistrict,
     GetTitelModel? selectedHouseType,
     GetTitelModel? selectedHouseFloor,
+    LocationStatus? status,
+    String? message,
   }) {
-    return ManageLocationSuccess(
+    return ManageLocationState(
       cities: cities ?? this.cities,
       houseTypes: houseTypes ?? this.houseTypes,
       houseFloors: houseFloors ?? this.houseFloors,
@@ -47,11 +49,22 @@ final class ManageLocationSuccess extends ManageLocationState {
       selectedDistrict: selectedDistrict ?? this.selectedDistrict,
       selectedHouseType: selectedHouseType ?? this.selectedHouseType,
       selectedHouseFloor: selectedHouseFloor ?? this.selectedHouseFloor,
+      status: status ?? this.status,
+      message: message ?? this.message,
     );
   }
-}
 
-final class ManageLocationFailure extends ManageLocationState {
-  final String message;
-  ManageLocationFailure(this.message);
+  @override
+  List<Object?> get props => [
+    cities,
+    districts,
+    houseTypes,
+    houseFloors,
+    selectedCity,
+    selectedDistrict,
+    selectedHouseType,
+    selectedHouseFloor,
+    status,
+    message,
+  ];
 }
