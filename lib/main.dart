@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logo_app_traning/%D9%90Add_new_over/select_over.dart';
 import 'package:logo_app_traning/Cubit/otp_cubit.dart';
 import 'package:logo_app_traning/Cubit/translate/translate_cubit.dart';
+import 'package:logo_app_traning/Maps/cubit/map_cubit.dart';
 import 'package:logo_app_traning/selectPackags/select_package.dart';
 import 'package:logo_app_traning/generated/l10n.dart';
 import 'package:logo_app_traning/helper/custom_snack_bar.dart';
@@ -10,7 +11,7 @@ import 'package:logo_app_traning/views/ForgetPassword/forget_password.dart';
 import 'package:logo_app_traning/views/Select_location/EnterLocation/cubit/manage_location_cubit.dart';
 import 'package:logo_app_traning/views/Select_location/page_location.dart';
 import 'package:logo_app_traning/views/Select_location/EnterLocation/enter_locaction.dart';
-import 'package:logo_app_traning/views/Select_location/select_location_atMaps.dart';
+import 'package:logo_app_traning/Maps/select_location_atMaps.dart';
 import 'package:logo_app_traning/views/HomePage/home_view.dart';
 import 'package:logo_app_traning/views/Login/login_page.dart';
 import 'package:logo_app_traning/views/page_service_houre.dart';
@@ -30,6 +31,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
+        BlocProvider(create: (context) => MapCubit()),
         BlocProvider(create: (context) => ManageLocationCubit()),
         BlocProvider(create: (context) => OtpCubit()),
         BlocProvider(create: (context) => TranslateCubit()),
