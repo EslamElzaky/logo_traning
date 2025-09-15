@@ -45,8 +45,9 @@ class MapCubit extends Cubit<MapState> {
 
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      await Geolocator.openLocationSettings();
-      return Future.error('خدمة الموقع مقفولة');
+      // await Geolocator.openLocationSettings();
+      await Geolocator.requestPermission();
+      // return Future.error('خدمة الموقع مقفولة');
     }
     permission = await Geolocator.checkPermission();
 
@@ -66,14 +67,31 @@ class MapCubit extends Cubit<MapState> {
   }
 
   Future<void> animateToMyLocation() async {
-    if (state.controllerGoogel != null &&
-        state.controllerGoogel!.isCompleted &&
-        state.myCameraPosition != null) {
-      final controller = await state.controllerGoogel!.future;
+    if (state.controllerGoogel.isCompleted && state.myCameraPosition != null) {
+      final controller = await state.controllerGoogel.future;
       log(state.myCameraPosition.runtimeType.toString());
       controller.animateCamera(
         CameraUpdate.newCameraPosition(state.myCameraPosition!),
       );
     }
+  }
+
+  Future<void> addMarker(LatLng position) async {
+    final marker = Marker(
+      markerId: MarkerId(position.toString()),
+      position: position,
+    );
+    emit(
+      state.copyWith(
+        markers: { marker},
+        // myCameraPosition: CameraPosition(target: position, zoom: 19),
+      ),
+    );
+    final controller = await state.controllerGoogel.future;
+    controller.animateCamera(
+      CameraUpdate.newCameraPosition(
+        CameraPosition(target: position, zoom: 19),
+      ),
+    );
   }
 }
