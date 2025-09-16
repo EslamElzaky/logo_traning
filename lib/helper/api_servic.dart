@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:logo_app_traning/model/regester_model.dart';
 
 class ApiService {
-  static const String baseUrl = 'https://crmtest.massadrhr.com:8006';
+  static const String baseUrl = 'https://crmtest.massadrhr.com:8006/ar/api/';
   Map<String, String> headers = {
     'platform': 'android',
     'version': '7.0.0',
@@ -49,22 +49,21 @@ class ApiService {
     } else {
       throw Exception("Unsupported method: $method");
     }
-    
-      requestLog(
-        url: Url.toString(),
-        httpType: method,
-        headers: headers,
-        statusCode: response.statusCode,
-        responseBody: response.body,
-      );
-      return response;
-    
+
+    requestLog(
+      url: Url.toString(),
+      httpType: method,
+      headers: headers,
+      statusCode: response.statusCode,
+      responseBody: response.body,
+    );
+    return response;
   }
 
   Future<http.Response> registerUser(SignUpUserPost user) async {
     final response = await ApiService().request(
       method: "post",
-      url: '/ar/api/Account/Register',
+      url: 'Account/Register',
       body: user.toJson(),
     );
 
@@ -76,7 +75,7 @@ class ApiService {
   Future<http.Response> loginUser(String phoneNumber, String password) async {
     final response = await ApiService().request(
       method: "post",
-      url: '/ar/api/Account/Login',
+      url: 'Account/Login',
       body: {"userName": phoneNumber, "password": password},
     );
 
@@ -91,7 +90,7 @@ class ApiService {
   ) async {
     final response = await request(
       method: "post",
-      url: '/ar/api/Account/VerifyCode',
+      url: 'Account/VerifyCode',
       body: {
         'phoneNumber': phoneNumber,
         'code': otp,
@@ -106,7 +105,7 @@ class ApiService {
   Future<http.Response> regenerateOtp(String phoneNumber) async {
     final response = await request(
       method: "post",
-      url: '/ar/api/Account/ReGenrateCode',
+      url: 'Account/ReGenrateCode',
       body: {'phoneNumber': phoneNumber},
     );
     return response;
@@ -115,7 +114,7 @@ class ApiService {
   Future<http.Response> forgetPassword(String phoneNumber) async {
     final response = await request(
       method: "post",
-      url: '/ar/api/Account/ForgotPassword',
+      url: 'Account/ForgotPassword',
       body: {'phoneNumber': phoneNumber},
     );
     return response;
@@ -129,7 +128,7 @@ class ApiService {
   ) async {
     final response = await request(
       method: "post",
-      url: '/ar/api/Account/ResetPassword',
+      url: 'Account/ResetPassword',
       body: {
         'phoneNumber': phoneNumber,
         'code': code,
@@ -142,7 +141,7 @@ class ApiService {
   }
 
   Future<http.Response> getSlider() async {
-    final response = await request(method: "get", url: '/ar/api/Slider');
+    final response = await request(method: "get", url: 'Slider');
 
     return response;
   }
@@ -150,20 +149,20 @@ class ApiService {
   Future<http.Response> getService() async {
     final response = await request(
       method: "get",
-      url: '/ar/api/Service/ServicesForService?serviceType=1',
+      url: 'Service/ServicesForService?serviceType=1',
     );
 
     return response;
   }
 
   Future<http.Response> getCity() async {
-    final response = await request(url: '/ar/api/City/Active', method: 'get');
+    final response = await request(url: 'City/Active', method: 'get');
     return response;
   }
 
   Future<http.Response> getHouseType() async {
     final response = await request(
-      url: '/ar/api/ContactAddress/HousingTypes',
+      url: 'ContactAddress/HousingTypes',
       method: 'get',
     );
     return response;
@@ -171,7 +170,7 @@ class ApiService {
 
   Future<http.Response> getHouseFloor() async {
     final response = await request(
-      url: '/ar/api/ContactAddress/HousingFloors',
+      url: 'ContactAddress/HousingFloors',
       method: 'get',
     );
     return response;
@@ -179,7 +178,7 @@ class ApiService {
 
   Future<http.Response> getDistricts(String cityId) async {
     final response = await request(
-      url: '/ar/api/City/Districts?cityId=$cityId',
+      url: 'City/Districts?cityId=$cityId',
       method: 'get',
     );
     return response;
@@ -187,7 +186,7 @@ class ApiService {
 
   Future<http.Response> validationCity(String cityId) async {
     final response = await request(
-      url: '/ar/api/City/CheckCityAvailabilityForService?cityId=$cityId&serviceType=1',
+      url: 'City/CheckCityAvailabilityForService?cityId=$cityId&serviceType=1',
       method: 'get',
     );
     log("VALIDATE CITY URL: ${response.request?.url}");
@@ -197,7 +196,15 @@ class ApiService {
 
   Future<http.Response> validationDistricts(String districtId) async {
     final response = await request(
-      url: '/ar/api/City/IsDistrictAvailableForService?districtId=$districtId',
+      url: 'City/IsDistrictAvailableForService?districtId=$districtId',
+      method: 'get',
+    );
+    return response;
+  }
+
+  Future<http.Response> getPolygon(String disttrictId) async {
+    final response = await request(
+      url: 'City/GetPolygonPath?districtId=$disttrictId',
       method: 'get',
     );
     return response;

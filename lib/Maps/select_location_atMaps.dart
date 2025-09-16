@@ -2,33 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:logo_app_traning/Maps/cubit/map_cubit.dart';
+
 import 'package:logo_app_traning/helper/custom_app_bar.dart';
 import 'package:logo_app_traning/helper/custom_button.dart';
 import 'package:logo_app_traning/helper/custom_navigation_bottom.dart';
 
 class SelectLocationAtmaps extends StatelessWidget {
-  SelectLocationAtmaps({super.key});
+const  SelectLocationAtmaps({super.key});
   static String id = 'selectLocationMaps';
-  Polygon polygon = Polygon(
-    strokeWidth: 1,
-    polygonId: PolygonId('1'),
-    fillColor: Colors.grey.withValues(alpha: .5),
-    holes: [
-      [
-        LatLng(31.031520189427106, 31.39390700984557),
-        LatLng(31.032592169677883, 31.384148985532846),
-        LatLng(31.03645119866889, 31.380479301175928),
-        LatLng(31.04016715284924, 31.39232237341872),
-      ],
-    ],
-    points: [
-      LatLng(31.041810701706908, 31.37330673629649),
-      LatLng(31.05667281137016, 31.406584101266013),
-      LatLng(31.030376730518313, 31.39782689995973),
-      LatLng(31.026160107182132, 31.370971482620444),
-    ],
-  );
 
+  // Polygon polygon = Polygon(
+  //   polygonId: PolygonId('1'),
+  //   points: [
+  //     LatLng(26.261606, 50.199802),
+  //     LatLng(26.266378, 50.213363),
+  //     LatLng(26.251137, 50.215423),
+  //     LatLng(26.249829, 50.202634),
+  //     LatLng(26.253832, 50.203407),
+  //     LatLng(26.261606, 50.199802),
+  //   ],
+  // );
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -65,7 +58,7 @@ class SelectLocationAtmaps extends StatelessWidget {
                           ClipRRect(
                             borderRadius: BorderRadius.circular(16),
                             child: GoogleMap(
-                              polygons: {polygon},
+                              polygons: state.polygons ,
                               initialCameraPosition: state.myCameraPosition!,
                               mapType: MapType.normal,
                               myLocationEnabled: true,
@@ -81,16 +74,6 @@ class SelectLocationAtmaps extends StatelessWidget {
                                 context.read<MapCubit>().addMarker(pos);
                               },
                             ),
-                            // : Center(
-                            //     child: Container(
-                            //       child: CircularProgressIndicator(color: Colors.black),
-                            //     ),
-                            //   ),
-                            //  Image.asset(
-                            //   'assets/images/download.png',
-                            //   fit: BoxFit.cover,
-                            //   width: double.infinity,
-                            // ),
                           ),
                           Positioned(
                             bottom: 35,

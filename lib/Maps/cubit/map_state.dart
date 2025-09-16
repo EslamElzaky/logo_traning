@@ -8,10 +8,12 @@ class MapState extends Equatable {
   final Position? position;
   final CameraPosition? myCameraPosition;
   final Set<Marker> markers;
+  final Set<Polygon> polygons;
   final String? message;
   final MapStatus stutes;
 
   MapState({
+    this.polygons =const{},
     this.markers = const {},
     this.position,
     this.myCameraPosition,
@@ -20,6 +22,7 @@ class MapState extends Equatable {
   });
 
   MapState copyWith({
+    Set<Polygon>? polygons, 
     Set<Marker>? markers,
     Position? position,
     CameraPosition? myCameraPosition,
@@ -27,6 +30,7 @@ class MapState extends Equatable {
     MapStatus? stutes,
   }) {
     return MapState(
+      polygons: polygons ?? this.polygons,
       markers: markers ?? this.markers,
       position: position ?? this.position,
       myCameraPosition: myCameraPosition ?? this.myCameraPosition,
@@ -43,5 +47,6 @@ class MapState extends Equatable {
     message,
     stutes,
     markers,
+    polygons
   ];
 }

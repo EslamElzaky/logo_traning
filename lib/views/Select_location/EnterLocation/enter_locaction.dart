@@ -1,6 +1,8 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:logo_app_traning/Maps/cubit/map_cubit.dart';
+import 'package:logo_app_traning/helper/api_servic.dart';
 import 'package:logo_app_traning/helper/custom_app_bar.dart';
 import 'package:logo_app_traning/helper/custom_button.dart';
 import 'package:logo_app_traning/helper/custom_dropdown.dart';
@@ -164,7 +166,16 @@ class SelectLocaction extends StatelessWidget {
                             CustomButton(
                               size: 100,
                               text: 'التالي',
-                              onTap: () {
+                              onTap: () async {
+                                final districtId = context
+                                    .read<ManageLocationCubit>()
+                                    .state
+                                    .selectedDistrict
+                                    ?.id;
+                                log("dddddd$districtId");
+                                context.read<MapCubit>().loadPolygon(
+                                  districtId!,
+                                );
                                 Navigator.pushNamed(
                                   context,
                                   'selectLocationMaps',

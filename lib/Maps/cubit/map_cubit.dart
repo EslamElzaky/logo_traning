@@ -1,9 +1,12 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:developer';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:logo_app_traning/helper/api_servic.dart';
 
 part 'map_state.dart';
 
@@ -45,9 +48,7 @@ class MapCubit extends Cubit<MapState> {
 
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      // await Geolocator.openLocationSettings();
       await Geolocator.requestPermission();
-      // return Future.error('خدمة الموقع مقفولة');
     }
     permission = await Geolocator.checkPermission();
 
@@ -83,7 +84,7 @@ class MapCubit extends Cubit<MapState> {
     );
     emit(
       state.copyWith(
-        markers: { marker},
+        markers: {marker},
         // myCameraPosition: CameraPosition(target: position, zoom: 19),
       ),
     );
@@ -93,5 +94,46 @@ class MapCubit extends Cubit<MapState> {
         CameraPosition(target: position, zoom: 19),
       ),
     );
+  }
+
+  Future<void> loadPolygon(String destrictId) async {
+    try {
+      final response = await ApiService().getPolygon(destrictId);
+      final body = jsonDecode(response.body);
+      if (response.statusCode == 200) {
+        final String raw = body["data"];
+        final cleaned = raw
+            .replaceAll('[', '')
+            .replaceAll(']', '')
+            .split(',')
+            .map((e) => e.trim())
+            .where((e) => e.isNotEmpty)
+            .toList();
+
+        // 2- تحويله لـ double
+        final numbers = cleaned.map((e) => double.parse(e)).toList();
+
+        // 3- كل اتنين (lat, lng) نعمل LatLng
+        final points = <LatLng>[];
+        for (int i = 0; i < numbers.length; i += 2) {
+          points.add(LatLng(numbers[i], numbers[i + 1]));
+        }
+
+        print(points);
+        final polygon = Polygon(
+          polygonId: PolygonId(destrictId),
+          points: points,
+          fillColor: Colors.red,
+
+          strokeWidth: 100,
+        );
+        print('Polygon created with ${points.length} points');
+        print('First point: ${points.first}');
+
+        emit(state.copyWith(polygons: {polygon}));
+      }
+    } catch (e) {
+      log("خطأ في تحميل البوليغون: $e");
+    }
   }
 }
