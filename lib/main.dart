@@ -31,8 +31,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (context) => MapCubit()),
-        BlocProvider(create: (context) => ManageLocationCubit()),
+        BlocProvider(create: (context) => MapCubit()..getCurrentLocation()),
+        BlocProvider(create: (context) => ManageLocationCubit()..loadTitelData()),
         BlocProvider(create: (context) => OtpCubit()),
         BlocProvider(create: (context) => TranslateCubit()),
       ],

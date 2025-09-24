@@ -13,7 +13,7 @@ class MapState extends Equatable {
   final MapStatus stutes;
 
   MapState({
-    this.polygons =const{},
+    this.polygons = const {},
     this.markers = const {},
     this.position,
     this.myCameraPosition,
@@ -22,7 +22,7 @@ class MapState extends Equatable {
   });
 
   MapState copyWith({
-    Set<Polygon>? polygons, 
+    Set<Polygon>? polygons,
     Set<Marker>? markers,
     Position? position,
     CameraPosition? myCameraPosition,
@@ -43,10 +43,9 @@ class MapState extends Equatable {
   List<Object?> get props => [
     position,
     myCameraPosition,
-    controllerGoogel,
     message,
     stutes,
     markers,
-    polygons
+    polygons,
   ];
 }

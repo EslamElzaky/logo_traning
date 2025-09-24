@@ -110,30 +110,104 @@ class MapCubit extends Cubit<MapState> {
             .where((e) => e.isNotEmpty)
             .toList();
 
-        // 2- تحويله لـ double
         final numbers = cleaned.map((e) => double.parse(e)).toList();
 
-        // 3- كل اتنين (lat, lng) نعمل LatLng
         final points = <LatLng>[];
         for (int i = 0; i < numbers.length; i += 2) {
+          // points.add(LatLng(numbers[i + 1], numbers[i]));
           points.add(LatLng(numbers[i], numbers[i + 1]));
         }
+        log(points.toString());
 
         print(points);
         final polygon = Polygon(
           polygonId: PolygonId(destrictId),
           points: points,
-          fillColor: Colors.red,
-
-          strokeWidth: 100,
+          fillColor: Colors.blue.withOpacity(0.3),
+          strokeColor: Colors.black,
+          strokeWidth: 1,
         );
+        print("قبل التحديث: ${state.polygons.length}");
+
+        emit(state.copyWith(polygons: {polygon}, stutes: MapStatus.success));
+
+        // emit(state.copyWith(polygons: {polygon}, stutes: MapStatus.success));
+        print("بعد التحديث (مش هيبان الجديد هنا): ${state.polygons.length}");
+
         print('Polygon created with ${points.length} points');
         print('First point: ${points.first}');
-
-        emit(state.copyWith(polygons: {polygon}));
+        log('تم إنشاء المضلع بنجاح بعدد ${points.length} نقطة');
       }
     } catch (e) {
       log("خطأ في تحميل البوليغون: $e");
     }
   }
+
+  // Future<void> loadPolygon(String districtId) async {
+  //   emit(state.copyWith(stutes: MapStatus.loading));
+
+  //   try {
+  //     final response = await ApiService().getPolygon(districtId);
+
+  //     if (response.statusCode == 200) {
+  //       final body = jsonDecode(response.body);
+  //       final String raw = body["data"];
+
+  //       // تنظيف البيانات بشكل أكثر فعالية
+  //       final cleaned = raw
+  //           .replaceAll(RegExp(r'[\[\]]'), '') // إزالة الأقواس
+  //           .split(',')
+  //           .map((e) => e.trim())
+  //           .where((e) => e.isNotEmpty)
+  //           .toList();
+
+  //       // التحقق من أن عدد العناصر زوجي
+  //       if (cleaned.length % 2 != 0) {
+  //         emit(
+  //           state.copyWith(
+  //             stutes: MapStatus.failure,
+  //             message: "بيانات المضلع غير صحيحة",
+  //           ),
+  //         );
+  //         return;
+  //       }
+
+  //       // تحويل البيانات إلى أرقام
+  //       final numbers = cleaned.map((e) => double.tryParse(e) ?? 0.0).toList();
+
+  //       final points = <LatLng>[];
+  //       for (int i = 0; i < numbers.length; i += 2) {
+  //         points.add(LatLng(numbers[i], numbers[i + 1]));
+  //       }
+  //       log(points.toString());
+
+  //       final polygon = Polygon(
+  //         polygonId: PolygonId(districtId),
+  //         points: points,
+  //         strokeWidth: 3,
+  //         strokeColor: Colors.blue,
+  //         fillColor: Colors.blue.withOpacity(0.15),
+  //       );
+
+  //       emit(state.copyWith(polygons: {polygon}));
+
+  //       log('تم إنشاء المضلع بنجاح بعدد ${points.length} نقطة');
+  //     } else {
+  //       emit(
+  //         state.copyWith(
+  //           stutes: MapStatus.failure,
+  //           message: "فشل في جلب البيانات: ${response.statusCode}",
+  //         ),
+  //       );
+  //     }
+  //   } catch (e) {
+  //     log("خطأ في تحميل البوليغون: $e");
+  //     emit(
+  //       state.copyWith(
+  //         stutes: MapStatus.failure,
+  //         message: "حدث خطأ أثناء تحميل المضلع",
+  //       ),
+  //     );
+  //   }
+  // }
 }

@@ -3,17 +3,24 @@ import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:logo_app_traning/Global/global_variable.dart';
 import 'package:logo_app_traning/helper/api_servic.dart';
+import 'package:logo_app_traning/model/add_new_address.dart';
 import 'package:logo_app_traning/views/Select_location/EnterLocation/enter_location_model_city.dart';
 
 part 'manage_location_state.dart';
 
 class ManageLocationCubit extends Cubit<ManageLocationState> {
   ManageLocationCubit() : super(ManageLocationState());
-
+  String? apFlate;
+  String? apDesc;
   static ManageLocationCubit get(context) => BlocProvider.of(context);
+
+  void initcontroller() {}
   Future<void> loadTitelData() async {
     emit(state.copyWith(status: LocationStatus.loading));
     List<GetTitelModel> cities = [];
@@ -204,6 +211,63 @@ class ManageLocationCubit extends Cubit<ManageLocationState> {
           status: LocationStatus.failure,
           message: " خطأ أثناء التحقق من الحي: $e",
         ),
+      );
+    }
+  }
+
+  void setApartmentNo(TextEditingController value) {
+    // emit(state.copyWith(apartmentNo: value));
+  }
+
+  void setAddressNotes(TextEditingController value) {
+    // emit(state.copyWith(addressNotes: value));
+  }
+
+  Future<void> saveAddress(
+    LatLng pos, {
+    String? apartmentNo,
+    String? description,
+  }) async {
+    // emit(state.copyWith(status: LocationStatus.loading));
+
+    try {
+      // بناء الموديل من القيم المخزنة في الـ state
+      final newAddress = AddNewAddress(
+        contactId: GlobalData.crmUserId,
+        houseNo: state.selectedHouseType?.value,
+        houseType: int.tryParse(state.selectedHouseType?.id ?? "0"),
+        floorNo: int.tryParse(state.selectedHouseFloor?.id ?? "0"),
+        apartmentNo: apartmentNo,
+        cityId: state.selectedCity?.id,
+        districtId: state.selectedDistrict?.id,
+        latitude: pos.latitude.toString(),
+        longitude: pos.longitude.toString(),
+        addressNotes: description,
+        type: 1,
+      );
+      emit(state.copyWith(status: LocationStatus.loading));
+      log(jsonEncode(newAddress.toJson()));
+      final response = await ApiService().addAddress(newAddress);
+       final body = jsonDecode(response.body);
+
+      if (response.statusCode == 200) {
+        emit(
+          state.copyWith(
+            status: LocationStatus.success,
+            message: body["data"] ?? "تم إضافة عنوان جديد بنجاح ",
+          ),
+        );
+      } else {
+        emit(
+          state.copyWith(
+            status: LocationStatus.failure,
+            message: body["message"]?? "فشل في إضافة العنوان",
+          ),
+        );
+      }
+    } catch (e) {
+      emit(
+        state.copyWith(status: LocationStatus.failure, message: "حصل خطأ: $e"),
       );
     }
   }

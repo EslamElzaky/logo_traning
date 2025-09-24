@@ -14,6 +14,7 @@ class CustomFormTextField extends StatefulWidget {
     this.onChanged,
     this.obscureText = false,
     this.controller,
+    this.onFieldSubmitted,
 
     this.usePassword = false,
     this.onSaved,
@@ -42,7 +43,7 @@ class CustomFormTextField extends StatefulWidget {
   final void Function(String?)? onSaved;
   final String? Function(String?)? validator;
   final List<TextInputFormatter>? inputFormatters;
-
+  final void Function(String)? onFieldSubmitted;
   @override
   State<CustomFormTextField> createState() => _CustomFormTextFieldState();
 }
@@ -51,6 +52,7 @@ class _CustomFormTextFieldState extends State<CustomFormTextField> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      onFieldSubmitted: widget.onFieldSubmitted,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       style: TextStyle(color: Colors.black),
       inputFormatters: widget.inputFormatters,

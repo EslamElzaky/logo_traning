@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:logo_app_traning/Global/global_variable.dart';
 import 'package:logo_app_traning/helper/api_servic.dart';
 import 'package:logo_app_traning/helper/custom_snack_bar.dart';
 
@@ -26,6 +27,8 @@ class LoginData {
       if (response.statusCode == 200) {
         final user = data['data']['user'];
         final userId = user["id"];
+
+         GlobalData.crmUserId = user["crmUserId"] ;
 
         final isVerified = user['phoneNumberConfirmed'] == true;
 

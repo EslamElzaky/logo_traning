@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:logo_app_traning/model/add_new_address.dart';
 import 'package:logo_app_traning/model/regester_model.dart';
 
 class ApiService {
@@ -78,6 +78,7 @@ class ApiService {
       url: 'Account/Login',
       body: {"userName": phoneNumber, "password": password},
     );
+    
 
     return response;
   }
@@ -206,6 +207,15 @@ class ApiService {
     final response = await request(
       url: 'City/GetPolygonPath?districtId=$disttrictId',
       method: 'get',
+    );
+    return response;
+  }
+
+  Future<http.Response> addAddress(AddNewAddress address) async {
+    final response = await request(
+      url: "ContactAddress/AddNewAddress",
+      method: "post",
+      body: address.toJson(),
     );
     return response;
   }

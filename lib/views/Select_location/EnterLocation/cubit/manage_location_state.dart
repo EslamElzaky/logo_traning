@@ -7,6 +7,8 @@ class ManageLocationState extends Equatable {
   final List<GetTitelModel> houseTypes;
   final List<GetTitelModel> houseFloors;
   final List<GetTitelModel> districts;
+  final String? apartmentNo;
+  final String? addressNotes;
 
   final GetTitelModel? selectedCity;
   final GetTitelModel? selectedDistrict;
@@ -17,6 +19,8 @@ class ManageLocationState extends Equatable {
 
   const ManageLocationState({
     this.cities = const [],
+    this.apartmentNo,
+    this.addressNotes,
     this.houseTypes = const [],
     this.houseFloors = const [],
     this.districts = const [],
