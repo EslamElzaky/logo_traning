@@ -33,7 +33,7 @@ class CustomDropdownField extends StatelessWidget {
 
       validator: (data) {
         if (data?.isEmpty ?? true) {
-          return 'Field is required';
+          return "$labelText مطلوب";
         }
         if (validator != null) {
           return validator!(data);

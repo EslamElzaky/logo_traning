@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logo_app_traning/helper/custom_app_bar.dart';
 import 'package:logo_app_traning/helper/custom_button.dart';
 import 'package:logo_app_traning/helper/custom_drawr.dart';
 import 'package:logo_app_traning/helper/custom_navigation_bottom.dart';
 import 'package:logo_app_traning/helper/custom_view_item.dart';
+import 'package:logo_app_traning/views/Select_location/EnterLocation/cubit/manage_location_cubit.dart';
 
 class ServiceHoure extends StatefulWidget {
   const ServiceHoure({super.key});
@@ -103,6 +105,7 @@ class _ServiceHoureState extends State<ServiceHoure> {
                     text: 'التالي',
                     color: Colors.black,
                     onTap: () {
+                      context.read<ManageLocationCubit>().getAddresses();
                       Navigator.pushNamed(context, 'pageLocation');
                     },
                   ),

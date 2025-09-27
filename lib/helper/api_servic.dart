@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:logo_app_traning/model/add_new_address.dart';
 import 'package:logo_app_traning/model/regester_model.dart';
@@ -78,7 +79,6 @@ class ApiService {
       url: 'Account/Login',
       body: {"userName": phoneNumber, "password": password},
     );
-    
 
     return response;
   }
@@ -217,6 +217,11 @@ class ApiService {
       method: "post",
       body: address.toJson(),
     );
+    return response;
+  }
+
+  Future<http.Response> getAddresses(String? contactId) async {
+    final response = await request(url: "SavedContactLocation/ContactSavedAddress?contactId=$contactId", method: "get");
     return response;
   }
 }

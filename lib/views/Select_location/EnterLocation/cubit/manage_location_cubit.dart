@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:math' hide log;
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -10,6 +11,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:logo_app_traning/Global/global_variable.dart';
 import 'package:logo_app_traning/helper/api_servic.dart';
 import 'package:logo_app_traning/model/add_new_address.dart';
+import 'package:logo_app_traning/model/get_addresses.dart';
 import 'package:logo_app_traning/views/Select_location/EnterLocation/enter_location_model_city.dart';
 
 part 'manage_location_state.dart';
@@ -248,7 +250,7 @@ class ManageLocationCubit extends Cubit<ManageLocationState> {
       emit(state.copyWith(status: LocationStatus.loading));
       log(jsonEncode(newAddress.toJson()));
       final response = await ApiService().addAddress(newAddress);
-       final body = jsonDecode(response.body);
+      final body = jsonDecode(response.body);
 
       if (response.statusCode == 200) {
         emit(
@@ -261,13 +263,53 @@ class ManageLocationCubit extends Cubit<ManageLocationState> {
         emit(
           state.copyWith(
             status: LocationStatus.failure,
-            message: body["message"]?? "فشل في إضافة العنوان",
+            message: body["message"] ?? "فشل في إضافة العنوان",
           ),
         );
       }
     } catch (e) {
       emit(
         state.copyWith(status: LocationStatus.failure, message: "حصل خطأ: $e"),
+      );
+    }
+  }
+
+  Future<void> getAddresses() async {
+    emit(state.copyWith(status: LocationStatus.loading));
+    try {
+      final response = await ApiService().getAddresses(GlobalData.crmUserId);
+      final body = jsonDecode(response.body);
+      if (response.statusCode == 200) {
+        final mainLocation = GetAddressesModel.fromJason(
+          body["data"]["mainLocations"],
+        );
+        final List data = body["data"]["subLocation"];
+        final subLocation = data
+            .map((e) => GetAddressesModel.fromJason(e))
+            .toList();
+        emit(
+          state.copyWith(
+            addresses: [
+              mainLocation,
+              // ...subLocation
+            ],
+            status: LocationStatus.success,
+          ),
+        );
+      } else {
+        emit(
+          state.copyWith(
+            status: LocationStatus.failure,
+            message: "فشل تحميل العناوين",
+          ),
+        );
+      }
+    } catch (e) {
+      emit(
+        state.copyWith(
+          status: LocationStatus.failure,
+          message: "خطأ في تحميل العناوين $e",
+        ),
       );
     }
   }

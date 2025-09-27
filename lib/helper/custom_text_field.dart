@@ -83,9 +83,9 @@ class _CustomFormTextFieldState extends State<CustomFormTextField> {
         errorText: widget.errorText,
         prefixText: widget.prefixText,
         hintText: widget.hintText,
-        hintStyle: TextStyle(fontSize: 12, color: Colors.black),
+        hintStyle: TextStyle(color: Colors.black),
         labelText: widget.labelText,
-        labelStyle: TextStyle(color: Colors.black, fontSize: 20),
+        labelStyle: TextStyle(color: Colors.black),
         floatingLabelBehavior: FloatingLabelBehavior.auto,
         suffixIcon: widget.usePassword
             ? GestureDetector(

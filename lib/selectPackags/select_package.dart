@@ -229,27 +229,31 @@ class _SelectpackageState extends State<Selectpackage> {
               ),
               Row(
                 children: [
-                  GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        isVisited = true;
-                      });
-                    },
-                    child: ContainerItem(
-                      text: "من 8ص الي 10ص",
-                      isSelected: isVisited,
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          isVisited = true;
+                        });
+                      },
+                      child: ContainerItem(
+                        text: "من 8ص الي 10ص",
+                        isSelected: isVisited,
+                      ),
                     ),
                   ),
                   const SizedBox(width: 10),
-                  GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        isVisited = false;
-                      });
-                    },
-                    child: ContainerItem(
-                      text: " من10ص الي 12ص",
-                      isSelected: !isVisited,
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          isVisited = false;
+                        });
+                      },
+                      child: ContainerItem(
+                        text: " من10ص الي 12ص",
+                        isSelected: !isVisited,
+                      ),
                     ),
                   ),
                 ],

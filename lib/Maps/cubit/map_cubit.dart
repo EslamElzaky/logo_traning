@@ -25,9 +25,9 @@ class MapCubit extends Cubit<MapState> {
       log('my Position$pos');
       final cameraPos = CameraPosition(
         bearing: 0.0,
-        target: LatLng(pos.latitude, pos.longitude),
+        target: LatLng(24.728739926082987, 46.71024862469926),
         tilt: 0.0,
-        zoom: 17,
+        zoom: 10,
       );
 
       emit(

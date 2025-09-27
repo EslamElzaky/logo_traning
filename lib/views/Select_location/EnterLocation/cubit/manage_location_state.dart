@@ -16,8 +16,10 @@ class ManageLocationState extends Equatable {
   final GetTitelModel? selectedHouseFloor;
   final String? message;
   final LocationStatus status;
+  final List<GetAddressesModel> addresses;
 
   const ManageLocationState({
+    this.addresses =const [],
     this.cities = const [],
     this.apartmentNo,
     this.addressNotes,
@@ -33,6 +35,7 @@ class ManageLocationState extends Equatable {
   });
 
   ManageLocationState copyWith({
+    List<GetAddressesModel>? addresses,
     List<GetTitelModel>? cities,
     List<GetTitelModel>? houseTypes,
     List<GetTitelModel>? houseFloors,
@@ -45,6 +48,7 @@ class ManageLocationState extends Equatable {
     String? message,
   }) {
     return ManageLocationState(
+      addresses: addresses ?? this.addresses,
       cities: cities ?? this.cities,
       houseTypes: houseTypes ?? this.houseTypes,
       houseFloors: houseFloors ?? this.houseFloors,
@@ -60,6 +64,7 @@ class ManageLocationState extends Equatable {
 
   @override
   List<Object?> get props => [
+    addresses,
     cities,
     districts,
     houseTypes,

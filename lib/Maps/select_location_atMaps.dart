@@ -9,17 +9,16 @@ import 'package:logo_app_traning/views/Select_location/EnterLocation/cubit/manag
 import 'package:maps_toolkit/maps_toolkit.dart' as mp;
 
 class SelectLocationAtmaps extends StatelessWidget {
- const SelectLocationAtmaps({super.key});
+  const SelectLocationAtmaps({super.key});
   static String id = 'selectLocationMaps';
-
 
   @override
   Widget build(BuildContext context) {
     final args =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>?;
 
-   final apartmentNo = args?["apartmentNo"];
-  final  description = args?["description"];
+    final apartmentNo = args?["apartmentNo"];
+    final description = args?["description"];
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: customAppBar(
@@ -58,7 +57,6 @@ class SelectLocationAtmaps extends StatelessWidget {
                             polygons: state.polygons,
                             initialCameraPosition: state.myCameraPosition!,
                             mapType: MapType.normal,
-                            myLocationEnabled: true,
                             zoomControlsEnabled: false,
                             myLocationButtonEnabled: false,
                             onMapCreated: (GoogleMapController controller) {
@@ -85,12 +83,9 @@ class SelectLocationAtmaps extends StatelessWidget {
                                   break;
                                 }
                               }
-
                               if (isInside) {
-                                // النقطة داخل البوليغون → ارسم الماركر
                                 context.read<MapCubit>().addMarker(pos);
                               } else {
-                                // النقطة خارج البوليغون → رسالة تنبيه
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
                                     content: Text(
