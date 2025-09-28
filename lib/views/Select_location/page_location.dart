@@ -5,7 +5,7 @@ import 'package:logo_app_traning/views/Select_location/EnterLocation/cubit/manag
 
 class PageLocation extends StatelessWidget {
   const PageLocation({super.key});
-  static String id = 'pageLocation';
+  static  String id = 'pageLocation';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
